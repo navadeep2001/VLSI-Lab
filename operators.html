@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Operators in Verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-verilog.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+    .logo-link {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      display: inline-block;
+    }
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+    p, ul {
+      line-height: 1.6;
+    }
+    img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+    code {
+      font-family: 'Courier New', monospace;
+    }
+    .return-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    .return-link a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .return-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo-link">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🧠 Operators in Verilog</h1>
+    <p>Operators in Verilog are used to perform arithmetic, logical, relational, and bit-level operations. They are crucial for modeling digital systems both behaviorally and structurally.</p>
+
+    <h2>✅ Types of Operators in Verilog</h2>
+    <p>Verilog operators are classified into three categories:</p>
+    <ul>
+      <li><strong>Unary operators:</strong> Act on one operand</li>
+      <li><strong>Binary operators:</strong> Act on two operands</li>
+      <li><strong>Ternary operator:</strong> Acts on three operands (conditional)</li>
+    </ul>
+
+    <h2>🔹 1. Unary Operators (Single Operand)</h2>
+    <pre><code class="language-verilog">!    Logical NOT       // !a → Inverts logical value
+~    Bitwise NOT       // ~a → Bitwise inversion
+&amp;    Reduction AND     // &a → ANDs all bits
+|    Reduction OR      // |a → ORs all bits
+^    Reduction XOR     // ^a → XORs all bits
+~&amp;   Reduction NAND    // ~&a → NAND reduction
+~|   Reduction NOR     // ~|a → NOR reduction
+~^ or ^~ Reduction XNOR // ~^a → XNOR reduction
+</code></pre>
+
+    <h2>🔍 Example:</h2>
+    <pre><code class="language-verilog">reg [3:0] a = 4'b1010;
+initial begin
+  $display("!a = %b", !a);   // 0
+  $display("~a = %b", ~a);   // 0101
+  $display("&a = %b", &a);   // 0
+end
+</code></pre>
+
+    <h2>🔹 2. Binary Operators (Two Operands)</h2>
+    <h3>➕ Arithmetic Operators</h3>
+    <pre><code class="language-verilog">+    Addition        a + b
+-    Subtraction     a - b
+*    Multiplication  a * b
+/    Division        a / b
+%    Modulus         a % b
+</code></pre>
+    <pre><code class="language-verilog">reg [7:0] a = 8, b = 3;
+initial begin
+  $display("a / b = %0d", a / b);  // 2
+  $display("a %% b = %0d", a % b); // 2
+end
+</code></pre>
+
+    <h3>🧮 Bitwise Operators</h3>
+    <pre><code class="language-verilog">&    Bitwise AND    a & b
+|    Bitwise OR     a | b
+^    Bitwise XOR    a ^ b
+~^ or ^~ Bitwise XNOR a ~^ b
+~    Bitwise NOT    ~a
+</code></pre>
+    <pre><code class="language-verilog">reg [3:0] a = 4'b1100, b = 4'b1010;
+initial begin
+  $display("a & b = %b", a & b);  // 1000
+  $display("a | b = %b", a | b);  // 1110
+  $display("a ^ b = %b", a ^ b);  // 0110
+end
+</code></pre>
+
+    <h3>🔘 Logical Operators</h3>
+    <pre><code class="language-verilog">!    Logical NOT    !a
+&&   Logical AND    a && b
+||   Logical OR     a || b
+</code></pre>
+    <pre><code class="language-verilog">a = 1; b = 0;
+$display("a && b = %b", a && b);  // 0
+$display("a || b = %b", a || b);  // 1
+</code></pre>
+
+    <h3>🧾 Relational Operators</h3>
+    <pre><code class="language-verilog"><    Less than         a < b
+>    Greater than      a > b
+<=   Less or equal     a <= b
+>=   Greater or equal  a >= b
+</code></pre>
+
+    <h3>🟰 Equality Operators</h3>
+    <pre><code class="language-verilog">==   Equal (ignores x/z)   a == b
+!=   Not equal             a != b
+===  Case equality         a === b
+!==  Case inequality       a !== b
+</code></pre>
+    <pre><code class="language-verilog">reg [1:0] a = 2'b1x, b = 2'b1z;
+$display("a == b  = %b", a == b);     // X
+$display("a === b = %b", a === b);    // 0
+</code></pre>
+
+    <h3>🪄 Shift Operators</h3>
+    <pre><code class="language-verilog">&lt;&lt;   Logical Left Shift      a << 2
+&gt;&gt;   Logical Right Shift     a >> 2
+&lt;&lt;&lt;  Arithmetic Left Shift   a <<< 2
+&gt;&gt;&gt;  Arithmetic Right Shift  a >>> 2
+</code></pre>
+    <pre><code class="language-verilog">a = 4'b1100;
+$display("a >> 1 = %b", a >> 1);  // 0110
+</code></pre>
+
+    <h2>🔹 3. Ternary Operator</h2>
+    <pre><code class="language-verilog">assign y = (sel) ? a : b;</code></pre>
+    <p>If sel is true (1), assign a to y; else assign b.</p>
+
+    <h2>🔄 Other Operator Categories</h2>
+    <h3>🧩 Concatenation</h3>
+    <pre><code class="language-verilog">a = 4'b1100; b = 4'b0011;
+y = {a, b};   // 8'b11000011
+x = {4{1'b1}}; // 4-bit 1111
+</code></pre>
+
+    <h3>🔂 Reduction Operators</h3>
+    <pre><code class="language-verilog">a = 4'b1110;
+$display("&a = %b", &a);  // 0
+$display("|a = %b", |a);  // 1
+$display("^a = %b", ^a);  // 1 (1^1^1^0)
+</code></pre>
+
+    <h2>🧠 Operator Precedence</h2>
+    <pre><code class="language-verilog">1 (High): () {}
+2: ~, !, unary +, -, reduction
+3: *, /, %
+4: +, -
+5: <<, >>, <<<, >>>
+6: <, <=, >, >=
+7: ==, !=, ===, !==
+8: & (bitwise AND)
+9: ^, ^~, ~^
+10:
+11: &&
+12:
+13: ? : (ternary)
+14 (Low): =, <=
+</code></pre>
+    <p><strong>Tip:</strong> Always use parentheses <code>()</code> for clarity in complex expressions.</p>
+
+    <div class="nav-links">
+      <a href="identifiers.html">← Back to Identifiers & Keywords</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="string.html">Next: Strings →</a>
+    </div>
+    <div class="return-link">
+      <a href="veriloghome.html">↩ Return to Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

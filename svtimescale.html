@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>`timescale in SystemVerilog - VLSI Labs</title>
+  <title>`timescale in Verilog - VLSI Labs</title>
+  <title>timescale in SystemVerilog - VLSI Labs</title>
+  <title>timescale in Verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .logo { position: absolute; top: 1rem; left: 1rem; height: 60px; }
+    .header-image { max-height: 100px; height: auto; width: auto; }
+    .toggle-container { position: absolute; top: 1rem; right: 1rem; }
+    .toggle-switch {
+      position: relative; width: 80px; height: 36px; background: #ccc;
+      border-radius: 30px; cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '☀️'; position: absolute; left: 4px; top: 4px;
+      width: 28px; height: 28px; background: var(--bg);
+      color: var(--text); border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.3s; font-size: 16px;
+    }
+    body.dark .toggle-switch::after { content: '🌙'; left: 48px; }
+    main { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    h1, h2 { color: var(--accent); }
+    h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+    h2 { margin-top: 2rem; }
+    p, ul { line-height: 1.6; }
+    ul { padding-left: 1.2rem; }
+    pre { background: var(--card); padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    .nav-links { margin-top: 2rem; text-align: center; }
+    .nav-links a { text-decoration: none; color: var(--accent); font-weight: 500; }
+    .nav-links a:hover { text-decoration: underline; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { border: 1px solid var(--text); padding: 0.5rem; text-align: left; }
+    thead { background: var(--card); }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html"><img src="logo.png" alt="VLSI Labs Logo" class="logo"></a>
+    <a href="svhome.html"><img src="header.png" alt="Header Banner" class="header-image"></a>
+    <div class="toggle-container"><div class="toggle-switch" onclick="toggleTheme()"></div></div>
+  </header>
+
+  <main>
+    <h1>⏱️ timescale in SystemVerilog</h1>
+    <p>In SystemVerilog, the <code>timescale</code> directive defines how time delays using <code>#</code> are interpreted in simulation. It's essential for controlling timing accuracy, especially for clock generation and delay modeling.</p>
+
+    <h2>📌 1. Understanding Time Unit and Precision</h2>
+    <p><strong>Syntax:</strong></p>
+    <pre><code class="language-verilog">`timescale &lt;time_unit&gt; / &lt;time_precision&gt;</code></pre>
+    <ul>
+      <li><strong>Time Unit</strong>: Base unit for delays (e.g., 1ns, 10ps).</li>
+      <li><strong>Time Precision</strong>: Smallest resolvable time step (e.g., 1ps).</li>
+    </ul>
+    <p>Formula to determine how many decimal places are preserved:</p>
+    <p><img src="timescalefor.png" alt="Timescale Formula" style="max-width:100%;"></p>
+
+    <h2>🎯 2. Effect of timescale on Delay Rounding</h2>
+    <h3>🧪 Case 1: <code>`timescale 1ns / 1ns</code></h3>
+    <ul><li>Decimal precision: 0 (i.e., delays rounded to nearest integer)</li></ul>
+    <table>
+      <thead><tr><th>Specified Delay</th><th>Rounded Delay</th></tr></thead>
+      <tbody>
+        <tr><td>#10.1</td><td>#10</td></tr>
+        <tr><td>#10.6</td><td>#11</td></tr>
+        <tr><td>#31.25</td><td>#31</td></tr>
+      </tbody>
+    </table>
+
+    <h3>🧪 Case 2: <code>`timescale 1ns / 1ps</code></h3>
+    <ul><li>Decimal precision: 3 (up to 0.001ns resolution)</li></ul>
+    <table>
+      <thead><tr><th>Specified Delay</th><th>Rounded Delay</th></tr></thead>
+      <tbody>
+        <tr><td>#10.1234</td><td>#10.123</td></tr>
+        <tr><td>#10.1236</td><td>#10.124</td></tr>
+        <tr><td>#31.25</td><td>#31.250</td></tr>
+      </tbody>
+    </table>
+
+    <h2>⏰ 3. Impact on Clock Generation</h2>
+    <p>Incorrect:</p>
+    <pre><code class="language-verilog">`timescale 1ns / 1ns
+always #31.25 clk = ~clk;  // Interpreted as #31</code></pre>
+    <p>Correct:</p>
+    <pre><code class="language-verilog">`timescale 1ns / 1ps
+always #31.25 clk = ~clk;  // Interpreted as #31.250</code></pre>
+
+    <h2>📌 4. Recommended timescale for Clock Generation</h2>
+    <table>
+      <thead><tr><th>Clock Frequency</th><th>Half-Period</th><th>Recommended Timescale</th></tr></thead>
+      <tbody>
+        <tr><td>16 MHz</td><td>31.25 ns</td><td>1ns / 1ps</td></tr>
+        <tr><td>8 MHz</td><td>62.5 ns</td><td>1ns / 1ps</td></tr>
+        <tr><td>100 MHz</td><td>5 ns</td><td>1ns / 1ps or 1ps / 1ps</td></tr>
+        <tr><td>1 GHz</td><td>0.5 ns</td><td>1ps / 1ps</td></tr>
+      </tbody>
+    </table>
+
+    <h2>✅ Conclusion</h2>
+    <ul>
+      <li>Use <code>`timescale</code> with appropriate precision for accurate simulation.</li>
+      <li>For fractional delays, use <code>1ns / 1ps</code> or better.</li>
+      <li>Avoid overly high precision (e.g., 1fs) as it can slow down simulations.</li>
+    </ul>
+
+    <div class="nav-links">
+      <a href="svalways.html">← Back to always block</a> |
+      <a href="svdatatypesflowchart.html">Next: Data Types Flowchart →</a><br>
+      <a href="svhome.html">↩ Return to System Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    // Persist theme across pages
+    window.onload = function() {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') document.body.classList.add('dark');
+    };
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

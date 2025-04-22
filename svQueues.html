@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Queues in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+  <h1>📌 Queue in SystemVerilog</h1>
+  <p>A SystemVerilog queue is a First-In-First-Out (FIFO) data structure that can grow and shrink dynamically. It stores elements of the same data type. 🧺</p>
+  <p>👉 It's like a line at a movie ticket counter — the person who comes first gets served first (FIFO). 🎟️</p>
+  <p>It's similar to a one-dimensional unpacked array, but with dynamic size.</p>
+  <h2>✅ Features</h2>
+  <ul>
+    <li>Indexing <code>q[0]</code></li>
+    <li>Concatenation <code>{q, 10}</code></li>
+    <li>Slicing <code>q[1:$-1]</code></li>
+    <li>Used with tasks/functions (by ref or non-ref)</li>
+  </ul>
+   <h2>🧱 Types of Queue</h2>
+  <h3>1. 🧭 Bounded Queue</h3>
+  <p>Has a maximum size (fixed limit). Once full, no more elements can be added.</p>
+  <pre><code class="language-verilog">logic [7:0] bounded_q [$:7]; // Max 8 elements (0 to 7)</code></pre>
+  <img src="svbounded.png" alt="Bounded Queue" style="max-width: 100%; height: auto;">
+
+  <h3>2. 🔓 Unbounded Queue</h3>
+  <p>No size limit, can grow as needed.</p>
+  <pre><code class="language-verilog">int unbounded_q[$]; // Can grow indefinitely</code></pre>
+  <img src="svunbounded.png" alt="Unbounded Queue" style="max-width: 100%; height: auto;">
+
+  <h2>📝 Queue Declaration & Initialization</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>string name_list[$];</code></td><td>Declares a queue of strings. 🍎🍊</td></tr>
+    <tr><td><code>bit [3:0] data[$];</code></td><td>Declares queue of 4-bit values. 🔢</td></tr>
+    <tr><td><code>logic [7:0] q[$:127];</code></td><td>Bounded queue of 8-bit values (max 128). 🔐</td></tr>
+    <tr><td><code>int q1[$] = {1,2,3};</code></td><td>Initializes queue with integers. 🔢</td></tr>
+    <tr><td><code>int q2[$];</code></td><td>Declares empty integer queue. ❌</td></tr>
+  </table>
+
+  <h2>🛠️ Queue Access & Modification</h2>
+  <table>
+    <tr><th>Code</th><th>Action</th></tr>
+    <tr><td><code>tmp = q1[0];</code></td><td>Access first element. 🎯</td></tr>
+    <tr><td><code>tmp = q1[$];</code></td><td>Access last element. 🎯</td></tr>
+    <tr><td><code>q2 = q1;</code></td><td>Copy all from q1 to q2. 🧾</td></tr>
+    <tr><td><code>q1 = {};</code></td><td>Clear all elements in q1. 🧹</td></tr>
+  </table>
+
+  <h2>🔧 Queue Insertions & Modifications</h2>
+  <table>
+    <tr><th>Code</th><th>Action</th></tr>
+    <tr><td><code>q2[2] = 15;</code></td><td>Replace value at index 2 with 15. 🔄</td></tr>
+    <tr><td><code>q2.insert(2, 15);</code></td><td>Insert 15 at index 2; shift right. ➡️</td></tr>
+    <tr><td><code>q2 = {q2, 22};</code></td><td>Append 22 to end. 📦</td></tr>
+    <tr><td><code>q2 = {99, q2};</code></td><td>Prepend 99 to start. 🛫</td></tr>
+  </table>
+
+  <h2>🧹 Queue Deletion</h2>
+  <table>
+    <tr><th>Code</th><th>Action</th></tr>
+    <tr><td><code>q2 = q2[1:$];</code></td><td>Remove first element. 🚪</td></tr>
+    <tr><td><code>q2 = q2[0:$-1];</code></td><td>Remove last element. 🚪</td></tr>
+    <tr><td><code>q2 = q2[1:$-1];</code></td><td>Remove both first & last. 🚪🚪</td></tr>
+  </table>
+
+  <h2>✅ Example: Fruits Queue</h2>
+  <pre><code class="language-verilog">module tb;
+  string fruits[$] = {"mango", "banana", "grapes"};
+
+  initial begin
+    foreach (fruits[i])
+      $display("fruits[%0d] = %s", i, fruits[i]);
+    $display("fruits = %p", fruits);
+    fruits = {};
+    $display("After deletion, fruits = %p", fruits);
+  end
+endmodule</code></pre>
+
+  <h2>🌈 Queue Slice Expressions</h2>
+  <pre><code class="language-verilog">module tb;
+  string toppings[$] = {"cheese", "pepperoni", "olives", "mushrooms"};
+
+  initial begin
+    $display("Selected toppings = %p", toppings[1:2]);
+    $display("Toppings from index 2 = %p", toppings[2:$]);
+    toppings[$+1] = "pineapple";
+    $display("After adding pineapple = %p", toppings);
+    $display("After removing cheese = %p", toppings[1:$]);
+  end
+endmodule</code></pre>
+
+  <h2>🧰 Queue Methods Cheat Sheet</h2>
+  <table>
+    <tr><th>Method</th><th>Description</th></tr>
+    <tr><td><code>size()</code></td><td>Returns the number of elements 📏</td></tr>
+    <tr><td><code>insert(i, val)</code></td><td>Inserts val at index i ➡️</td></tr>
+    <tr><td><code>delete(i)</code></td><td>Deletes element at index i ❌</td></tr>
+    <tr><td><code>pop_front()</code></td><td>Removes and returns the first element 🍎</td></tr>
+    <tr><td><code>pop_back()</code></td><td>Removes and returns the last element 🍌</td></tr>
+    <tr><td><code>push_front(val)</code></td><td>Inserts val at front 🔼</td></tr>
+    <tr><td><code>push_back(val)</code></td><td>Appends val at end 🔽</td></tr>
+  </table>
+
+  <h2>🧪 Example Code: Queue of Fruits</h2>
+  <pre><code class="language-verilog">module tb;
+  string fruits[$] = {"apple", "pear", "mango", "banana"};
+
+  initial begin
+    $display("Number of fruits=%0d   fruits=%p", fruits.size(), fruits);
+    fruits.insert(1, "peach");
+    $display("Insert peach, size=%0d fruits=%p", fruits.size(), fruits);
+    fruits.delete(3);
+    $display("Delete mango, size=%0d fruits=%p", fruits.size(), fruits);
+    $display("Pop %s, size=%0d fruits=%p", fruits.pop_front(), fruits.size(), fruits);
+    fruits.push_front("apricot");
+    $display("Push apricot, size=%0d fruits=%p", fruits.size(), fruits);
+    $display("Pop %s, size=%0d fruits=%p", fruits.pop_back(), fruits.size(), fruits);
+    fruits.push_back("plum");
+    $display("Push plum, size=%0d fruits=%p", fruits.size(), fruits);
+  end
+endmodule</code></pre>
+
+  <h2>✅ Queue of Class Objects</h2>
+  <pre><code class="language-verilog">class Fruit;
+  string name;
+  function new (string name="Unknown");
+    this.name = name;
+  endfunction
+endclass
+
+module tb;
+  Fruit list[$];
+  initial begin
+    Fruit f = new("Apple");
+    list.push_back(f);
+    f = new("Banana");
+    list.push_back(f);
+    foreach (list[i])
+      $display("list[%0d] = %s", i, list[i].name);
+    $display("list = %p", list);
+  end
+endmodule</code></pre>
+
+  <h2>✅ Queue of Dynamic Arrays</h2>
+  <pre><code class="language-verilog">typedef int int_da [];
+
+module tb;
+  int_da scores_list [$];
+
+  initial begin
+    int_da teamA = '{100, 85, 90};
+    int_da teamB = '{78, 88};
+    int_da teamC = '{92, 89, 95, 91};
+
+    scores_list.push_back(teamA);
+    scores_list.push_back(teamB);
+    scores_list.push_back(teamC);
+
+    foreach (scores_list[i])
+      foreach (scores_list[i][j])
+        $display("Team[%0d] Score[%0d] = %0d", i, j, scores_list[i][j]);
+
+    $display("scores_list = %p", scores_list);
+  end
+endmodule</code></pre>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svAssociative.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Associative Array
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svStructure.html" style="text-decoration: none; color: var(--link);">
+      Next: Structure →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

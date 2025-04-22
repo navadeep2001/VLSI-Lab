@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>always Block in SystemVerilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    h1, h2 {
+      color: var(--accent);
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      margin-top: 2rem;
+    }
+    p, ul {
+      line-height: 1.6;
+    }
+    ul {
+      padding-left: 1.2rem;
+    }
+    pre {
+      background: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="svhome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🔁 always Block in SystemVerilog</h1>
+
+    <p>The <strong>always block</strong> is used to describe sequential or combinational logic. Unlike the initial block, which executes only once, the always block (in SystemVerilog: <code>always_comb</code>, <code>always_ff</code>, etc.) executes continuously based on sensitivity list conditions or clock events.</p>
+
+    <h2>🔷 Types of always Blocks</h2>
+
+    <h3>1. Combinational Logic (<code>always_comb</code>)</h3>
+    <p>Used to model combinational circuits like logic gates, muxes, and adders.</p>
+
+    <pre><code class="language-verilog">module comb_logic;
+  logic a, b, y;
+
+  always_comb begin
+    y = a & b;  // AND gate
+  end
+endmodule
+</code></pre>
+
+    <p><strong>✅ Key Points:</strong></p>
+    <ul>
+      <li><code>always_comb</code> infers the sensitivity list automatically.</li>
+      <li>Ideal for modeling purely combinational logic.</li>
+      <li>Synthesis-safe and simulation-consistent.</li>
+      <li>No clock edges or delays (<code>#</code>) should be used here.</li>
+    </ul>
+
+    <h3>2. Sequential Logic (<code>always_ff @(posedge clk)</code>)</h3>
+    <p>Used to describe flip-flops, registers, and counters.</p>
+
+    <pre><code class="language-verilog">module seq_logic;
+  logic clk, reset, q;
+
+  always_ff @(posedge clk) begin
+    if (reset)
+      q <= 0;  // Reset to 0
+    else
+      q <= ~q; // Toggle flip-flop
+  end
+endmodule
+</code></pre>
+
+    <p><strong>✅ Key Points:</strong></p>
+    <ul>
+      <li><code>always_ff</code> is for modeling clocked (sequential) logic.</li>
+      <li>Triggers on posedge (rising edge) of the clock.</li>
+      <li>Uses non-blocking assignments (<code>&lt;=</code>) to prevent race conditions.</li>
+      <li>Synthesis-friendly and semantically clear.</li>
+    </ul>
+
+    <h3>3. Sensitivity on Both Edges (<code>always_ff @(posedge clk or negedge reset)</code>)</h3>
+    <p>Used for asynchronous reset flip-flops.</p>
+
+    <pre><code class="language-verilog">module async_reset;
+  logic clk, reset, q;
+
+  always_ff @(posedge clk or negedge reset) begin
+    if (!reset)
+      q <= 0;  // Async Reset
+    else
+      q <= 1;  // Normal operation
+  end
+endmodule
+</code></pre>
+
+    <p><strong>✅ Key Points:</strong></p>
+    <ul>
+      <li><code>reset</code> is asynchronous – it doesn’t wait for a clock edge.</li>
+      <li><code>always_ff</code> supports both edges in SystemVerilog.</li>
+      <li>Common in design patterns requiring immediate reset behavior.</li>
+    </ul>
+
+    <h2>🔄 Key Differences: initial vs always (SystemVerilog)</h2>
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>initial Block</th><th>always_comb / always_ff Block</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Execution</td><td>Runs once at simulation start</td><td>Runs continuously based on triggers</td></tr>
+        <tr><td>Use Case</td><td>Testbenches, stimulus, initialization</td><td>RTL design – combinational/sequential logic</td></tr>
+        <tr><td>Clock/Event</td><td>No event triggers</td><td>Triggers on posedge/negedge or signal change</td></tr>
+        <tr><td>Delays (#)</td><td>Allowed (simulation only)</td><td>Not allowed (in synthesizable code)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>🧪 always Block in Testbench</h2>
+    <p>Using <code>always #4</code> for Clock Generation – Even though not synthesizable, it's widely used in testbenches for clock and stimulus generation.</p>
+
+    <pre><code class="language-verilog">module tb;
+  logic clk;
+
+  // Generate clock with a period of 8 time units
+  always #4 clk = ~clk;
+
+  initial begin
+    clk = 0;         // Initialize clock
+    #50 $finish;     // End simulation after 50 time units
+  end
+
+  initial begin
+    $monitor("Time = %0t, clk = %b", $time, clk);
+  end
+endmodule
+</code></pre>
+
+    <p><strong>✅ Key Points:</strong></p>
+    <ul>
+      <li><code>always #4 clk = ~clk;</code> toggles the clock every 4 units → 8-unit period.</li>
+      <li><code>$finish</code> ends simulation after 50 units.</li>
+      <li><code>$monitor</code> logs clock values every time it changes.</li>
+    </ul>
+
+    <h2>❗ Why always #4 is Not Synthesizable?</h2>
+    <ul>
+      <li><code>#</code> delays are simulation-only.</li>
+      <li>Real hardware uses flip-flops and clocks, not delays.</li>
+      <li>Use <code>always_ff @(posedge clk)</code> in synthesizable RTL.</li>
+    </ul>
+
+    <h2>✅ When to Use always #4?</h2>
+    <table>
+      <thead><tr><th>Scenario</th><th>Use Allowed?</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Testbenches</td><td>✅</td><td>For clock or repetitive stimulus</td></tr>
+        <tr><td>Synthesizable RTL Code</td><td>❌</td><td>Use always_ff, always_comb instead</td></tr>
+      </tbody>
+    </table>
+
+    <h2>🔚 Conclusion</h2>
+    <ul>
+      <li>SystemVerilog replaces generic <code>always</code> with specialized blocks:</li>
+      <li><code>always_comb</code> → Combinational Logic</li>
+      <li><code>always_ff</code> → Sequential (clocked) Logic</li>
+      <li>Use <code>always #</code> only in testbenches, not in synthesizable design.</li>
+      <li>Prefer SystemVerilog constructs for clarity, synthesis correctness, and tool friendliness.</li>
+    </ul>
+
+    <div class="nav-links">
+      <a href="svinitial.html">← Back to Initial Block</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="svtimescale.html">Next: timescale →</a>
+      <br><br>
+      <a href="svhome.html">↩ Return to System Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

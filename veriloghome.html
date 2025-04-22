@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verilog HDL - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    .module {
+      background: var(--card);
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .module:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .module h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+
+    .topics {
+      margin-top: 0.5rem;
+      padding-left: 1rem;
+      display: none;
+    }
+
+    .topics a {
+      display: block;
+      margin: 5px 0;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .topics a:hover {
+      color: var(--accent);
+    }
+
+    .active .topics {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+      <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+  </a>
+    <img src="header.png" alt="Header Banner" class="header-image">
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+<main>
+  <h1>Verilog HDL Syllabus</h1>
+
+ <div class="module">
+  <h2 onclick="toggleTopics(this)">📘 Module 1: Introduction to Verilog & HDL</h2>
+  <div class="topics">
+    <a href="whatisHDL.html">What is HDL?</a>
+    <a href="verilogVsC.html">Verilog vs C</a>
+    <a href="verilogvsVHDL.html">Verilog vs VHDL</a>
+    <a href="ASICFPGA.html">ASIC vs FPGA Design Flow</a>
+    <a href="Abstractionlevels.html">Abstraction Levels</a>
+    <a href="topdown.html">Top-down vs Bottom-up Design</a>
+  </div>
+</div>
+
+
+  <div class="module">
+  <h2 onclick="toggleTopics(this)">📘 Module 2: Lexical Conventions & Syntax</h2>
+  <div class="topics">
+    <a href="whitespace.html">White Spaces, Comments</a>
+    <a href="escaped.html">Escaped Identifiers</a>
+    <a href="number.html">Number Specification</a>
+    <a href="identifiers.html">Identifiers & Keywords</a>
+    <a href="operators.html">Operators</a>
+    <a href="string.html">Strings</a>
+  </div>
+</div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 3: Data Types</h2>
+    <div class="topics">
+      <a href="#">4-state vs 2-state Logic</a>
+      <a href="#">Net Types</a>
+      <a href="#">Variable Types</a>
+      <a href="#">Signed vs Unsigned</a>
+      <a href="#">Vectors & Arrays</a>
+      <a href="#">Memories</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 4: Modules & Hierarchy</h2>
+    <div class="topics">
+      <a href="#">Module Declaration</a>
+      <a href="#">Port Declarations</a>
+      <a href="#">Instantiation</a>
+      <a href="#">Scope Rules</a>
+      <a href="#">Overriding Parameters</a>
+      <a href="#">Hierarchical References</a>
+    </div>
+  </div>
+
+ <div class="module">
+  <h2 onclick="toggleTopics(this)">📘 Module 5: Modeling Styles</h2>
+  <div class="topics">
+    <strong>🔹 Switch-Level Modeling</strong>
+    <a href="#">Switch Primitives: <code>nmos</code>, <code>pmos</code>, <code>cmos</code>, <code>tran</code>, <code>tranif</code>, etc.</a>
+    <a href="#">Transmission Gate Modeling</a>
+
+    <strong>🔹 Gate-Level Modeling</strong>
+    <a href="#">Primitive Gates: <code>and</code>, <code>or</code>, <code>not</code>, <code>xor</code>, etc.</a>
+    <a href="#">Structural Modeling</a>
+    <a href="#">Delays using <code>#</code></a>
+
+    <strong>🔹 Dataflow Modeling</strong>
+    <a href="#">assign Statement</a>
+    <a href="#">LHS & RHS Rules</a>
+
+    <strong>🔹 Behavioral Modeling</strong>
+    <a href="#">Procedural Blocks: <code>initial</code>, <code>always</code></a>
+    <a href="#">Sensitivity Lists: <code>always @(*)</code>, <code>always @(posedge clk)</code></a>
+    <a href="#">Timing Control: <code>#</code>, <code>@</code>, <code>wait</code></a>
+    <a href="#">Control Flow: <code>if</code>, <code>case</code>, <code>for</code>, <code>while</code>, <code>repeat</code>, <code>forever</code></a>
+    <a href="#">Blocking vs Non-blocking Assignments (<code>=</code>, <code><=</code>)</a>
+    <a href="#">Inter/intra-assignment delay</a>
+    <a href="#"><code>#0</code> Delay</a>
+    <a href="#">Event Control using <code>-></code> and <code>event</code></a>
+    <a href="#">Named Events</a>
+  </div>
+</div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 6: Testbenches & Simulation</h2>
+    <div class="topics">
+      <a href="#">Writing a Testbench</a>
+      <a href="#">Initial vs Always</a>
+      <a href="#">Clock Generator</a>
+      <a href="#">timescale Directive</a>
+      <a href="#">Simulation Tasks</a>
+      <a href="#">Process Control</a>
+      <a href="#">Self-checking Testbenches</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 7: Tasks, Functions, Parameters</h2>
+    <div class="topics">
+      <a href="#">Tasks vs Functions</a>
+      <a href="#">Static vs Automatic</a>
+      <a href="#">Parameter Declaration</a>
+      <a href="#">Default Parameter Values</a>
+      <a href="#">Scope and Overrides</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 8: Compiler Directives</h2>
+    <div class="topics">
+      <a href="#">define, include</a>
+      <a href="#">ifdef, ifndef, else, endif</a>
+      <a href="#">timescale</a>
+      <a href="#">celldefine, endcelldefine</a>
+      <a href="#">unconnected_drive, default_nettype</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 9: System Tasks & Functions</h2>
+    <div class="topics">
+      <a href="#">Display Tasks</a>
+      <a href="#">Simulation Control</a>
+      <a href="#">Time Tasks</a>
+      <a href="#">Randomization</a>
+      <a href="#">Dumping</a>
+      <a href="#">File Reading</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 10: File I/O</h2>
+    <div class="topics">
+      <a href="#">File Operations</a>
+      <a href="#">Reading from Files</a>
+      <a href="#">Writing to Files</a>
+      <a href="#">Memory File Handling</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 11: Advanced RTL Concepts</h2>
+    <div class="topics">
+      <a href="#">Register Banks & FIFOs</a>
+      <a href="#">Datapath & Controller Design</a>
+      <a href="#">Pipelining</a>
+      <a href="#">FSM Design</a>
+      <a href="#">Reset Strategies</a>
+      <a href="#">Clock Gating</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 12: Gate-Level & Post-Synthesis Simulation</h2>
+    <div class="topics">
+      <a href="#">Gate-Level Simulation</a>
+      <a href="#">SDF Annotation</a>
+      <a href="#">Specify Blocks</a>
+      <a href="#">Timing Checks</a>
+      <a href="#">Hold Fixing Techniques</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 13: Event Regions & Scheduling</h2>
+    <div class="topics">
+      <a href="#">Active, Inactive, NBA Regions</a>
+      <a href="#">Monitor Region</a>
+      <a href="#">Delta Cycles</a>
+      <a href="#">Zero-delay Race</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 14: Essential Add-ons</h2>
+    <div class="topics">
+      <a href="#">force and release</a>
+      <a href="#">FSM Design Techniques</a>
+      <a href="#">Race Conditions & Avoidance</a>
+      <a href="#">Reset Strategies</a>
+      <a href="#">Clock Gating</a>
+    </div>
+  </div>
+
+</main>
+
+
+ <script>
+  // Apply saved theme on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark');
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }
+
+  function toggleTopics(el) {
+    const parent = el.parentElement;
+    parent.classList.toggle('active');
+  }
+</script>
+
+</body>
+</html>

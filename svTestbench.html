@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SystemVerilog Testbench - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1, h2 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+      text-align: left;
+      background-color: var(--card);
+    }
+
+    th {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 1rem 0;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="svhome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🧪 Testbench</h1>
+    <p><strong>Date:</strong> April 19, 2025</p>
+
+    <p>A <strong>testbench</strong> is a virtual simulation environment used to verify the functionality of a design (<strong>DUT</strong> - Design Under Test). It applies input stimulus, observes the outputs, and checks whether the DUT behaves as expected.</p>
+
+    <h2>🧭 What Does a Testbench Do?</h2>
+    <ul>
+      <li>✅ Generates different types of input stimulus</li>
+      <li>✅ Drives the DUT inputs with the generated stimulus</li>
+      <li>✅ Allows the DUT to process input and produce output</li>
+      <li>✅ Monitors and checks DUT outputs against expected results</li>
+      <li>✅ Identifies functional bugs</li>
+      <li>✅ Fixes bugs in design or verification code</li>
+      <li>🔁 Repeats the above steps until the DUT is functionally correct</li>
+    </ul>
+
+    <h2>🧱 Components of a Testbench</h2>
+    <p>A well-structured testbench is modular, scalable, flexible, and reusable. It separates various verification functionalities into independent components for better maintainability and reuse.</p>
+
+    <h2>📦 Testbench Block Diagram</h2>
+    <img src="svtestbench.png" alt="SystemVerilog Testbench Diagram">
+
+    <h2>🔍 Testbench Components Explained</h2>
+    <table>
+      <tr>
+        <th>Component</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Generator</td>
+        <td>Generates various input patterns (stimuli) to test different scenarios</td>
+      </tr>
+      <tr>
+        <td>Interface</td>
+        <td>Connects the DUT and verification components; holds shared signals</td>
+      </tr>
+      <tr>
+        <td>Driver</td>
+        <td>Drives signals from generator to DUT via interface</td>
+      </tr>
+      <tr>
+        <td>Monitor</td>
+        <td>Observes and captures signals from the DUT for checking</td>
+      </tr>
+      <tr>
+        <td>Scoreboard</td>
+        <td>Compares DUT outputs with expected results, logs mismatches</td>
+      </tr>
+      <tr>
+        <td>Environment</td>
+        <td>Contains and connects all the components (driver, monitor, scoreboard, etc.)</td>
+      </tr>
+      <tr>
+        <td>Test</td>
+        <td>Controls the environment; allows configuration for different testing scenarios</td>
+      </tr>
+    </table>
+
+    <div class="nav-links">
+      <a href="svintroduction.html">← Back to Introduction</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="svdut.html">Next: What is DUT? →</a>
+      <br><br>
+      <a href="svhome.html">↩ Return to System Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>blocking and nonblocking in systemverilog - VLSI Labs</title>
+ <title>blocking and nonblocking in verilog - VLSI Labs</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🔄 Blocking Assignments (=) in SystemVerilog</h1>
+  <p>Blocking assignments (<code>=</code>) execute step-by-step, one line at a time ⏩—within the same <code>initial</code> or <code>always</code> block. Think of them like steps in a cooking recipe 🧑‍🍳—each one waits for the previous to finish.</p>
+  <p>If you don't use delays (like <code>#5</code>), everything happens instantly at simulation time 0. Delays ⌛ move simulation time forward.</p>
+
+  <h3>📌 Example 1: Without Delays (All at Time 0)</h3>
+  <pre><code class="language-verilog">module tb;
+  reg [7:0] x, y, z;
+
+  initial begin
+    x = 8'd10;      // at time 0, x = 10
+    y = x;          // at time 0, y = 10
+    z = x + y;      // at time 0, z = 20
+    $display("[%0t] x=%0d y=%0d z=%0d", $time, x, y, z);
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong></p>
+  <ul>
+    <li><code>x</code> is set to 10</li>
+    <li><code>y</code> copies <code>x</code> (so y = 10)</li>
+    <li><code>z</code> becomes x + y = 10 + 10 = 20</li>
+    <li>All happen instantly at time 0</li>
+  </ul>
+  <p>🖥️ <strong>Output:</strong></p>
+  <pre><code class="language-ini">[0] x=10 y=10 z=20</code></pre>
+<br>
+  <h3>📌 Example 2: With Delays (Controlled Timing)</h3>
+  <pre><code class="language-verilog">module tb;
+  reg [7:0] counter;
+
+  initial begin
+    counter = 0;  
+    $display("[%0t] counter = %0d", $time, counter);
+
+    #5 counter = counter + 1;  
+    $display("[%0t] counter = %0d", $time, counter);
+
+    #5 counter = counter + 1;  
+    $display("[%0t] counter = %0d", $time, counter);
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong></p>
+  <ul>
+    <li>At time 0: counter = 0</li>
+    <li>Wait 5 units → counter becomes 1</li>
+    <li>Wait another 5 units → counter becomes 2</li>
+  </ul>
+  <p>🖥️ <strong>Output:</strong></p>
+  <pre><code class="language-ini">[0]  counter = 0
+[5]  counter = 1
+[10] counter = 2</code></pre>
+<br>
+  <h3>📌 Example 3: Multiple Initial Blocks Without Delay (Parallel at Time 0)</h3>
+  <pre><code class="language-verilog">module tb;
+  reg [7:0] a, b;
+
+  initial begin
+    a = 5;
+    $display("[%0t] a = %0d", $time, a);
+  end
+
+  initial begin
+    b = 10;
+    $display("[%0t] b = %0d", $time, b);
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong> Both <code>initial</code> blocks start at time 0 🕛. They run in parallel 🚀. Order of prints can vary depending on the simulator.</p>
+  <p>🖥️ <strong>Possible Output:</strong></p>
+  <pre><code class="language-ini">[0] a = 5
+[0] b = 10</code></pre>
+<br>
+  <h3>📌 Example 4: Multiple Initial Blocks With Delay (Independent Timelines)</h3>
+  <pre><code class="language-verilog">module tb;
+  reg [7:0] a, b;
+
+  initial begin
+    #2 a = 100;
+    $display("[%0t] a = %0d", $time, a);
+  end
+
+  initial begin
+    #5 b = 200;
+    $display("[%0t] b = %0d", $time, b);
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong></p>
+  <ul>
+    <li>Both blocks start at time 0</li>
+    <li>First block waits 2 units → assigns a = 100</li>
+    <li>Second block waits 5 units → assigns b = 200</li>
+    <li>They execute independently</li>
+  </ul>
+  <p>🖥️ <strong>Output:</strong></p>
+  <pre><code class="language-ini">[2] a = 100
+[5] b = 200</code></pre>
+
+  <h3>🗝️ Key Takeaways</h3>
+  <ul>
+    <li>🧩 Sequential execution inside one initial block</li>
+    <li>🧵 Parallel execution across multiple initial blocks</li>
+    <li>🕹️ No delay? Everything happens at time 0</li>
+    <li>⏳ Delays control simulation time between steps</li>
+    <li>🧠 Each initial block is its own timeline—no interference!</li>
+  </ul>
+<br><br>
+  <h1>🔁 Non-Blocking Assignments (<=) in SystemVerilog</h1>
+  <p>Non-blocking assignments don’t update the variable immediately. Instead, they wait until the end of the time step to apply the new values. It’s like writing down everyone’s order at a restaurant 📝 and serving all the dishes at once 🍽️ after you’ve taken everyone’s order.</p>
+
+  <h3>📌 Example 1: No Delay, Single Block (All at Time 0ns)</h3>
+  <pre><code class="language-verilog">module tb;
+  reg [7:0] a, b, c;
+
+  initial begin
+    a <= 8'd10;
+    $display("[%0t] a=%0d b=%0d c=%0d", $time, a, b, c);
+    
+    b <= 8'd20;
+    $display("[%0t] a=%0d b=%0d c=%0d", $time, a, b, c);
+    
+    c <= 8'd30;
+    $display("[%0t] a=%0d b=%0d c=%0d", $time, a, b, c);
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong> a, b, and c are scheduled to get new values, but <code>$display</code> happens immediately—before the values are updated. So, you'll see unknowns (xx).</p>
+  <p>🖥️ <strong>Output:</strong></p>
+  <pre><code class="language-ini">[0] a=xx b=xx c=xx
+[0] a=xx b=xx c=xx
+[0] a=xx b=xx c=xx</code></pre>
+<br>
+  <h3>📌 Example 2: With Delays (⏱️ Scheduled Execution)</h3>
+  <pre><code class="language-verilog">module tb;
+  reg [7:0] a, b, c;
+
+  initial begin
+    a <= 8'd10;
+    $display("[%0t] a=%0d b=%0d c=%0d", $time, a, b, c);
+
+    #5 b <= 8'd20;
+    $display("[%0t] a=%0d b=%0d c=%0d", $time, a, b, c);
+
+    #5 c <= 8'd30;
+    $display("[%0t] a=%0d b=%0d c=%0d", $time, a, b, c);
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong></p>
+  <ul>
+    <li>At 0ns: a is scheduled (but not updated yet)</li>
+    <li>At 5ns: b is scheduled (still not updated when printed)</li>
+    <li>At 10ns: c is scheduled</li>
+    <li>Updates take effect at the end of each time step</li>
+  </ul>
+  <p>🖥️ <strong>Output:</strong></p>
+  <pre><code class="language-ini">[0]  a=xx b=xx c=xx
+[5]  a=10 b=xx c=xx
+[10] a=10 b=20 c=xx</code></pre>
+<br>
+  <h3>📌 Example 3: Two initial Blocks with No Delays</h3>
+  <pre><code class="language-verilog">module tb;
+  reg [7:0] a, b;
+
+  initial begin
+    a <= 8'd5;
+    $display("[%0t] a=%0d", $time, a);
+  end
+
+  initial begin
+    b <= 8'd15;
+    $display("[%0t] b=%0d", $time, b);
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong> Both blocks run in parallel at 0ns. Values are not yet assigned during the <code>$display</code>.</p>
+  <p>🖥️ <strong>Output:</strong></p>
+  <pre><code class="language-ini">[0] a=xx
+[0] b=xx</code></pre>
+<br>
+  <h3>📌 Example 4: Two initial Blocks with Delays</h3>
+  <pre><code class="language-verilog">module tb;
+  reg [7:0] a, b;
+
+  initial begin
+    #5 a <= 8'd5;
+    $display("[%0t] a=%0d", $time, a);
+  end
+
+  initial begin
+    #10 b <= 8'd15;
+    $display("[%0t] b=%0d", $time, b);
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong></p>
+  <ul>
+    <li>At 5ns, <code>a</code> is scheduled</li>
+    <li>At 10ns, <code>b</code> is scheduled</li>
+    <li>Values are visible after their time step ends</li>
+    <li>(You can see the values only if you add another delay after each to print again!)</li>
+  </ul>
+  <p>🖥️ <strong>Output:</strong></p>
+  <pre><code class="language-ini">[5]  a=xx
+[10] b=xx</code></pre>
+
+  <h3>🧠 Key Points to Remember</h3>
+  <ul>
+    <li>✅ RHS values are captured immediately 🧠</li>
+    <li>✅ LHS values are updated at the end of the time step 🕔</li>
+    <li>✅ Useful for sequential logic (like flip-flops) 💾</li>
+    <li>✅ $display happens instantly, before updates 👀</li>
+    <li>✅ To see updated values, add a small delay before $display</li>
+  </ul>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svcaseunique.html" style="text-decoration: none; color: var(--link);">
+      ← Back to unique case, unique0 case, priority case
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svalwaysinSystemVerilog.html" style="text-decoration: none; color: var(--link);">
+      Next: always in SystemVerilog →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

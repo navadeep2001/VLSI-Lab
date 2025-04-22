@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Top-Down vs Bottom-Up Design - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+      cursor: pointer;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+      cursor: pointer;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      display: inline-block;
+      margin: 0.25rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html"><img src="logo.png" alt="VLSI Labs Logo" class="logo"></a>
+    <a href="veriloghome.html"><img src="header.png" alt="Header Banner" class="header-image"></a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Design Styles: Top-Down vs Bottom-Up</h1>
+    <p>When designing complex digital systems (like processors, controllers, or SoCs), engineers follow certain methodologies to organize and manage the design process. The two most common ones are:</p>
+
+    <h2>Top-Down Design</h2>
+    <p>In this approach, the big picture is planned first, and then it's broken down into smaller parts.</p>
+
+    <p><strong>🧩 How it works:</strong></p>
+    <ul>
+      <li>Start by defining the top-level block (like a CPU).</li>
+      <li>Identify the sub-blocks needed to build it (ALU, control unit, memory interface, etc.).</li>
+      <li>Then break each sub-block into smaller components.</li>
+      <li>Keep going until you reach the smallest building blocks (called leaf cells).</li>
+    </ul>
+
+    <p><strong>🔧 Example:</strong></p>
+    <ul>
+      <li>You start with the idea of a CPU.</li>
+      <li>Then divide it into components: ALU, register file, instruction decoder.</li>
+      <li>The ALU is further broken down into adders, multiplexers, etc.</li>
+    </ul>
+
+    <img src="top.png" alt="Top-Down Design Image">
+
+    <h2>Bottom-Up Design</h2>
+    <p>Here, the process begins by building the basic blocks first. These are then connected to form larger systems.</p>
+
+    <p><strong>🧩 How it works:</strong></p>
+    <ul>
+      <li>Start with the smallest reusable components (like AND/OR gates, flip-flops, multiplexers).</li>
+      <li>Combine them to build medium-sized blocks (like adders, registers).</li>
+      <li>Then connect those to create larger systems (ALU, controllers, etc.).</li>
+    </ul>
+
+    <p><strong>🔧 Example:</strong></p>
+    <ul>
+      <li>First design standard gates.</li>
+      <li>Use them to build adders, decoders, etc.</li>
+      <li>Then combine them to create the full processor.</li>
+    </ul>
+
+    <img src="bottom.png" alt="Bottom-Up Design Image">
+
+    <h2>Combined Approach in Practice</h2>
+    <p>In real-world chip design, both approaches are used together:</p>
+    <ul>
+      <li><strong>Top-Down:</strong> Architects define the system-level hierarchy and functionality.</li>
+      <li><strong>Bottom-Up:</strong> Designers use pre-built, optimized building blocks (standard cells) to implement the system efficiently in terms of area, speed, and power.</li>
+    </ul>
+
+    <p>These standard cells come from a library and contain:</p>
+    <ul>
+      <li>Physical layout info</li>
+      <li>Timing data (rise/fall times)</li>
+      <li>Power consumption</li>
+      <li>Schematic</li>
+    </ul>
+
+    <p>Synthesis tools pick the right cells to meet design goals.</p>
+
+    <h2>Real-Life Analogy</h2>
+    <p>Imagine you're building a car:</p>
+    <ul>
+      <li><strong>Top-Down:</strong> You start by designing the car concept, then decide on sub-systems (engine, suspension, electronics), and finally choose components for each sub-system.</li>
+      <li><strong>Bottom-Up:</strong> You first build and perfect parts like the gear system, sensors, and pistons. Then you use them to construct the engine and eventually assemble the car.</li>
+    </ul>
+
+    <div class="nav-links">
+      <a href="Abstractionlevels.html">← Back to Abstraction Levels</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="whitespace.html">Next: White Spaces, Comments →</a>
+      <br>
+      <a href="veriloghome.html">↩ Return to Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

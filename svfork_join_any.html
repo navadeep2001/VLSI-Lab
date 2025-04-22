@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>fork_join_any in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>✅ fork...join_any in SystemVerilog</h1>
+  <p><strong>fork...join_any</strong> is used to start multiple processes in parallel, but unlike <code>fork...join</code>, it will continue execution as soon as <em>any one</em> of the processes finishes.</p>
+  <p>
+    <img src="fork-join_any.gif" alt="fork join_any" style="max-width: 300px;">
+  </p>
+  <p>The remaining processes will still continue running in the background, but the simulation doesn’t wait for them.</p>
+
+  <h2>🔹 Simple Example: fork...join_any</h2>
+  <pre><code class="language-verilog">
+module fork_join_any_example;
+  initial begin
+    $display("Simulation started at time %0t", $time);
+
+    fork
+      #5 $display("Process 1 done at time %0t", $time);
+      #10 $display("Process 2 done at time %0t", $time);
+    join_any
+
+    $display("At least one process is done at time %0t", $time);
+  end
+endmodule
+  </code></pre>
+  <p>💡 <strong>What Happens:</strong></p>
+  <ul>
+    <li>Both processes start at time 0.</li>
+    <li>Process 1 finishes at time 5 → execution moves forward.</li>
+    <li>Even though Process 2 is still running, the next line is executed at time 5.</li>
+  </ul>
+
+  <h2>🔹 Nested Example: fork...join_any</h2>
+  <pre><code class="language-verilog">
+module nested_fork_join_any;
+  initial begin
+    $display("Simulation started at time %0t", $time);
+
+    fork
+      begin
+        #15 $display("Outer Task 1 done at %0t", $time);
+      end
+
+      fork
+        #3 $display("Inner Task A done at %0t", $time);
+        #8 $display("Inner Task B done at %0t", $time);
+      join_any
+    join_any
+
+    $display("At least one task in outer or inner fork is done at %0t", $time);
+  end
+endmodule
+  </code></pre>
+  <p>💡 <strong>What Happens:</strong></p>
+  <ul>
+    <li>Inner tasks start together → Task A finishes at time 3.</li>
+    <li>Because it's <code>join_any</code>, simulation moves forward as soon as that one finishes, even though the other tasks are still running.</li>
+  </ul>
+
+  <h2>🔹 Real-Life Analogy: Taxi Waiting for Passengers 🚕</h2>
+  <p>Imagine you're a taxi driver waiting to pick up passengers from three locations:</p>
+  <ul>
+    <li>🏢 Passenger A finishes work in 10 minutes</li>
+    <li>🏫 Passenger B finishes class in 5 minutes</li>
+    <li>🏥 Passenger C finishes appointment in 15 minutes</li>
+  </ul>
+  <p>You use <code>fork...join_any</code> when you say:</p>
+  <blockquote>
+    “As soon as any one of you is ready, I’m leaving. The others can take another cab.”
+  </blockquote>
+  <p>All passengers are notified at the same time. You leave as soon as one is ready.</p>
+  <p><strong>Others are still doing their thing, but you don’t wait.</strong></p>
+  <p><strong>That’s what fork...join_any does—parallel start, continue when any finishes.</strong></p>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svfork_join.html" style="text-decoration: none; color: var(--link);">
+      ← Back to fork_join
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svfork_join_none.html" style="text-decoration: none; color: var(--link);">
+      Next:  fork_join_none  →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

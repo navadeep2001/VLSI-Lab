@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mail box in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>📨 SystemVerilog Mailbox</h1>
+  <p>Imagine a mailbox 📬 outside your house. You can put letters in it ✉️ and someone else can take them out later 📤. That’s exactly what a SystemVerilog mailbox does in your testbench!</p>
+
+  <h2>🤝 What is a Mailbox?</h2>
+  <p>A mailbox is a special data structure that allows two or more processes (or threads) to share information safely and synchronously.</p>
+  <p>Think of:</p>
+  <ul>
+    <li>One person putting a letter 🧑‍💼✉️📬</li>
+    <li>Another person picking it up 🧑‍🏫📬📖</li>
+    <li>They don’t need to talk directly—they just use the mailbox.</li>
+  </ul>
+<br>
+  <h2>📦 Two Types of Mailboxes</h2>
+  <h3>1. 🧺 Unbounded Mailbox</h3>
+  <p>Like an infinite-sized bag! You can keep putting stuff inside and it never gets full. 🎒♾️</p>
+  <pre><code class="language-verilog">
+mailbox mbx; // Unbounded
+  </code></pre>
+
+  <h3>2. 📥 Bounded Mailbox</h3>
+  <p>Like a box with limited space! Once full, you can’t put more things in until some are removed. 🧳</p>
+  <pre><code class="language-verilog">
+mailbox mbx = new(3); // Can hold only 3 items
+  </code></pre>
+  <p>If full, the process trying to add waits patiently. 😴</p>
+<br>
+  <h2>🔄 Generic vs Parameterized</h2>
+  <h3>📦 Generic (Typeless) Mailbox</h3>
+  <p>You can throw anything in it—ints, strings, objects... Like a magic bag that holds everything. 🪄🎁</p>
+  <pre><code class="language-verilog">
+mailbox mbx;
+  </code></pre>
+
+  <h3>🎯 Parameterized Mailbox</h3>
+  <p>It holds only specific types—like a box for only apples 🍎 or only books 📚.</p>
+  <pre><code class="language-systemverilog">
+mailbox#(int) mbx_int;       // Only integers
+mailbox#(string) mbx_str;    // Only strings
+  </code></pre>
+
+  <h2>🎮 Real Life Analogy</h2>
+  <p>Imagine a restaurant kitchen:</p>
+  <ul>
+    <li>🍳 Chef (Producer) cooks meals and places them on a counter (mailbox).</li>
+    <li>🧑‍🍽️ Waiter (Consumer) picks meals from the counter and serves them.</li>
+    <li>If the counter is full (bounded), the chef waits. If it's empty, the waiter waits.</li>
+  </ul>
+<br>
+  <h2>🛠️ Common Mailbox Methods</h2>
+  <table>
+    <thead>
+      <tr><th>🛠 Method</th><th>📖 What it Does</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>put(msg)</td><td>Waits if full. Adds item. 📥</td></tr>
+      <tr><td>get(msg)</td><td>Waits if empty. Removes item. 📤</td></tr>
+      <tr><td>peek(msg)</td><td>Reads but doesn't remove. 👀</td></tr>
+      <tr><td>try_put(msg)</td><td>Tries adding, but non-blocking. 👍</td></tr>
+      <tr><td>try_get(msg)</td><td>Tries getting, doesn't wait. ❗</td></tr>
+      <tr><td>num()</td><td>Shows how many items are in the mailbox. 🔢</td></tr>
+    </tbody>
+  </table>
+
+  <h2>👩‍💻 Basic Example – Generic Mailbox</h2>
+  <pre><code class="language-verilog">
+module tb;
+  mailbox mbx = new(2); // max 2 items
+
+  initial begin
+    for (int i = 0; i < 5; i++) begin
+      #1 mbx.put(i); // put item
+      $display("Put %0d, items=%0d", i, mbx.num());
+    end
+  end
+
+  initial begin
+    forever begin
+      int val;
+      #2 mbx.get(val); // get item
+      $display("Got %0d, items=%0d", val, mbx.num());
+    end
+  end
+endmodule
+  </code></pre>
+
+  <h3>🧾 Output (Simulation Log):</h3>
+  <pre><code class="language-verilog">
+Put 0, items=1
+Got 0, items=0
+Put 1, items=1
+Put 2, items=2
+Got 1, items=1
+Put 3, items=2
+Got 2, items=1
+Put 4, items=2
+  </code></pre>
+
+  <h2>🧑‍🤝‍🧑 Parameterized Mailbox Example</h2>
+  <p>Let’s pass names (strings) from one class to another using a mailbox 🗂️.</p>
+  <pre><code class="language-verilog">
+typedef mailbox#(string) s_mbox;
+
+class Sender;
+  s_mbox box;
+  task send();
+    foreach (int i[3]) begin
+      string name = $sformatf("name_%0d", i);
+      box.put(name);
+      $display("📮 Sent: %s", name);
+    end
+  endtask
+endclass
+
+class Receiver;
+  s_mbox box;
+  task receive();
+    forever begin
+      string name;
+      box.get(name);
+      $display("📬 Received: %s", name);
+    end
+  endtask
+endclass
+
+module tb;
+  s_mbox mail = new();
+  Sender s = new();
+  Receiver r = new();
+
+  initial begin
+    s.box = mail;
+    r.box = mail;
+    fork
+      s.send();
+      r.receive();
+    join
+  end
+endmodule
+  </code></pre>
+<br>
+  <h2>🚫 What if Types Don’t Match?</h2>
+  <p>If one component uses <code>mailbox#(string)</code> and the other uses <code>mailbox#(int)</code>—<strong>BOOM! 💥</strong> Compilation Error! SystemVerilog catches it early to protect your design.</p>
+
+  <h2>💬 When to Use Mailboxes?</h2>
+  <ul>
+    <li>When threads run independently</li>
+    <li>When you want safe communication between classes/processes</li>
+    <li>When you don’t care about accessing items by index (FIFO only)</li>
+  </ul>
+
+  <h2>✅ Summary</h2>
+  <table>
+    <thead>
+      <tr><th>🧠 Concept</th><th>💡 Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Mailbox 📬</td><td>A safe communication tool between processes</td></tr>
+      <tr><td>Bounded 📦</td><td>Limited space, blocks if full</td></tr>
+      <tr><td>Unbounded 🎒</td><td>Infinite size</td></tr>
+      <tr><td>Typeless 🧺</td><td>Accepts anything</td></tr>
+      <tr><td>Typed 🎯</td><td>Accepts only specified type</td></tr>
+      <tr><td>put/get</td><td>Blocking actions</td></tr>
+      <tr><td>try_put/get</td><td>Non-blocking</td></tr>
+    </tbody>
+  </table>
+
+
+
+
+
+
+
+
+<br><br>
+  <h2>📨 Mailbox vs 📚 Queue — What's the Difference?</h2>
+  <p>Both mailbox and queue help us store and retrieve data — but they are very different in how they work and what they are used for.</p>
+
+  <h2>💬 Real-Life Analogy</h2>
+  <p><strong>📬 Mailbox:</strong> Think of a mailbox outside your house. Anyone can put letters in it (even when you're not home), and you can check it later to retrieve your letters in the order they arrived (FIFO).</p>
+  <p>You can't take the 3rd letter directly — you have to go in order.</p>
+  <p>Only one person can put or get at a time — the postman waits if you're checking the box.</p>
+
+  <p><strong>📚 Queue:</strong> Think of a stack of trays in the canteen. You can access any tray by index (like tray[2]). You can also remove from the front or push at the end easily. It’s just a data structure sitting in memory — no locking, no blocking, no rules.</p>
+
+  <h2>📋 Key Differences Table</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>📬 Mailbox</th>
+        <th>📚 Queue</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Type</td>
+        <td>Built-in class with methods</td>
+        <td>Built-in data structure</td>
+      </tr>
+      <tr>
+        <td>Synchronization</td>
+        <td>Yes, uses blocking mechanisms</td>
+        <td>No synchronization</td>
+      </tr>
+      <tr>
+        <td>Concurrency Safe</td>
+        <td>✅ Yes, thread-safe</td>
+        <td>❌ No, not thread-safe</td>
+      </tr>
+      <tr>
+        <td>Access Order</td>
+        <td>FIFO (First-In First-Out) only</td>
+        <td>Can access any index</td>
+      </tr>
+      <tr>
+        <td>Blocking Behavior</td>
+        <td>Can block if empty/full</td>
+        <td>Never blocks</td>
+      </tr>
+      <tr>
+        <td>Atomic Operation</td>
+        <td>Yes (via semaphores)</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Usage</td>
+        <td>Ideal for inter-thread communication</td>
+        <td>Ideal for storing and processing local data</td>
+      </tr>
+      <tr>
+        <td>Can Access by Index?</td>
+        <td>❌ No</td>
+        <td>✅ Yes (q[0], q[2], etc.)</td>
+      </tr>
+      <tr>
+        <td>Built-in Methods</td>
+        <td>put, get, peek, try_*</td>
+        <td>$push_front, $pop_back, etc.</td>
+      </tr>
+      <tr>
+        <td>Data Size Limit</td>
+        <td>Optional limit (bounded/unbounded)</td>
+        <td>Dynamic size</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>🤔 Example Comparison</h2>
+
+  <h3>✅ Mailbox — Thread Communication Example</h3>
+  <pre><code class="language-verilog">
+mailbox mbx = new();
+
+initial begin
+  mbx.put("Hello from thread A"); // Thread A puts data
+end
+
+initial begin
+  string msg;
+  mbx.get(msg); // Thread B waits and gets data
+  $display(msg); // Output: Hello from thread A
+end
+  </code></pre>
+  <p>✅ Thread-safe communication using <code>put()</code> and <code>get()</code>.</p>
+
+  <h3>❌ Queue — No Thread Safety</h3>
+  <pre><code class="language-verilog">
+string queue[] = {};
+
+initial begin
+  queue.push_back("Hello");  // Anyone can push
+end
+
+initial begin
+  $display(queue[0]); // But this could cause error if queue is empty!
+end
+  </code></pre>
+  <p>🚨 No blocking — if one thread tries to access when the queue is empty, it might crash.</p>
+
+  <h2>🧠 When to Use What?</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Situation</th>
+        <th>Use</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Threads want to talk to each other</td>
+        <td>📬 Mailbox</td>
+      </tr>
+      <tr>
+        <td>You want fast access to data</td>
+        <td>📚 Queue</td>
+      </tr>
+      <tr>
+        <td>You need blocking behavior (wait if empty)</td>
+        <td>📬 Mailbox</td>
+      </tr>
+      <tr>
+        <td>You want to access by index or sort/filter</td>
+        <td>📚 Queue</td>
+      </tr>
+      <tr>
+        <td>You want type safety with concurrency</td>
+        <td>📬 Parameterized Mailbox</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svSemaphore.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Semaphore
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svScheduling.html" style="text-decoration: none; color: var(--link);">
+      Next:  Scheduling  →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Number Specifications - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <!-- Prism.js for syntax highlighting -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-verilog.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+    p, ul {
+      line-height: 1.6;
+    }
+    img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+    .return-link {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .return-link a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .return-link a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+    code {
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🔢 Number Specifications</h1>
+    <p>In Verilog, numbers can be written in various bases (binary, octal, decimal, hexadecimal), and can be sized or un-sized.</p>
+
+    <h2>📏 Sized Numbers:</h2>
+    <p>These specify the number of bits, base, and the value.</p>
+
+    <h2>🧾 Syntax:</h2>
+    <pre><code>&lt;size&gt;’&lt;radix&gt;&lt;number&gt;</code></pre>
+    <ul>
+      <li><code>&lt;size&gt;</code> = number of bits</li>
+      <li><code>&lt;radix&gt;</code> = b (binary), o (octal), d (decimal), h (hex)</li>
+    </ul>
+
+    <h2>✅ Examples:</h2>
+    <ul>
+      <li><code>4’b1111</code> → 4-bit binary number</li>
+      <li><code>12’habc</code> → 12-bit hexadecimal = <code>12’b1010_1011_1100</code></li>
+      <li><code>12’h2x5</code> → <code>12’b0010_xxxx_0101</code> (contains unknown x)</li>
+      <li><code>12’o1zx</code> → <code>12’b000_001_zzz_xxx</code> (octal number with unknowns)</li>
+    </ul>
+
+    <h2>📏 Number Specification: Un-Sized Numbers</h2>
+    <p>When size is not specified, tools generally default it to 32-bits.</p>
+
+    <h2>🧾 Syntax:</h2>
+    <pre><code>’&lt;radix&gt;&lt;number&gt;</code></pre>
+
+    <h2>✅ Examples:</h2>
+    <ul>
+      <li><code>’b1111</code> → 32-bit binary</li>
+      <li><code>’o21</code> → 32-bit octal</li>
+      <li><code>’d225</code> → 32-bit decimal</li>
+      <li><code>’h13x</code> → 32-bit hexadecimal with unknown x</li>
+    </ul>
+
+    <h2>🔎 Note:</h2>
+    <ul>
+      <li>Default size = 32 bits, unless explicitly specified.</li>
+    </ul>
+
+    <h2>➖ Negative Numbers:</h2>
+    <ul>
+      <li><code>-6’d3</code> → 6-bit representation of -3</li>
+      <li><code>4’d-2</code> → 4-bit representation of -2</li>
+    </ul>
+
+    <h2>🔤 Underscore Character:</h2>
+    <ul>
+      <li>Allowed only for readability</li>
+      <li>Ignored during simulation</li>
+      <li>Example: <code>12’b1111_0000_1010</code> is same as <code>12’b111100001010</code></li>
+    </ul>
+
+    <h2>❓ Question Mark:</h2>
+    <ul>
+      <li><code>'?'</code> is treated the same as <code>'z'</code> in numbers</li>
+      <li>Example: <code>4’b10??</code> = <code>4’b10zz</code></li>
+    </ul>
+
+    <div class="nav-links">
+      <a href="escaped.html">← Back to Escaped Identifiers</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="identifiers.html">Next: Identifiers & Keywords →</a>
+    </div>
+
+    <div class="return-link">
+      <a href="veriloghome.html">↩ Return to Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

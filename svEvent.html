@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>💡 What is an Event?</h1>
+  <p>An event in SystemVerilog is like a signal flag 📍 — it’s a static object used to synchronize between two or more processes (threads) running in parallel.</p>
+  <ul>
+    <li>🔁 One process triggers the event (raises the flag)</li>
+    <li>⏳ Another process waits for that event (watches the flag)</li>
+  </ul>
+  <p>You can think of it as a rendezvous point between threads.</p>
+
+  <h2>🧠 Why are Events Used in SystemVerilog?</h2>
+  <p>Events help you coordinate between different blocks running in parallel.</p>
+  <p>Imagine:</p>
+  <ul>
+    <li>📦 One process is sending data</li>
+    <li>📥 Another is waiting to receive it</li>
+  </ul>
+  <p>But they run independently. So how will the receiver know when the sender has sent it?</p>
+  <p>👉 That’s where an event comes in!</p>
+  <p>The sender can trigger an event after sending, and the receiver waits for that trigger before continuing.</p>
+  <p>✅ Events ensure proper timing and synchronization in complex simulations.</p>
+
+  <h2>✍️ Syntax for Declaring Events</h2>
+  <pre><code class="language-verilog">
+event over;                    // Declare a new event named 'over'
+event over_again = over;       // 'over_again' becomes an alias to 'over'
+event empty = null;            // 'empty' points to no event (null)
+  </code></pre>
+
+  <h2>🔗 Real-Life Analogy: Chef & Waiter</h2>
+  <ul>
+    <li>👨‍🍳 Chef is cooking a dish (Process A)</li>
+    <li>🍽️ Waiter is waiting to serve it (Process B)</li>
+    <li>Chef sets a "ready flag" (🟩 event) when done</li>
+    <li>Waiter waits until flag is raised, then serves the dish</li>
+  </ul>
+  <p>Chef → triggers the event</p>
+  <p>Waiter → waits for the event</p>
+  <p>It keeps things in sync, avoiding chaos in your testbench kitchen 😄</p>
+<br>
+<br>
+  <h2>🚦 Event Triggering</h2>
+  <h3>🔹 <code>-></code> Operator – Blocking Event Trigger</h3>
+  <p>Immediately triggers the event. All processes currently waiting will be unblocked.</p>
+  <pre><code class="language-verilog">
+event start;
+
+initial begin
+  #10 -> start; // Triggers the event at 10ns
+end
+
+initial begin
+  @(start); // This will unblock at 10ns
+  $display("Event was triggered!");
+end
+  </code></pre>
+
+  <h3>🔸 <code>->></code> Operator – Non-Blocking Event Trigger</h3>
+  <p>Queues the trigger and returns immediately. The current process doesn’t wait.</p>
+  <pre><code class="language-verilog">
+event notify;
+
+initial begin
+  #10 ->> notify; // Non-blocking trigger
+  $display("I triggered notify and moved on!");
+end
+
+initial begin
+  @(notify); // Will unblock after trigger
+  $display("Received the event!");
+end
+  </code></pre>
+
+  <h3>👨‍🏫 Real-Life Analogy: 🔔 Fire Drill</h3>
+  <ul>
+    <li><strong>Blocking (->):</strong> Principal rings the bell and waits</li>
+    <li><strong>Non-blocking (->>):</strong> Principal rings the bell and immediately moves on</li>
+  </ul>
+<br> <br>
+  <h2>🕓 Waiting for Event Trigger</h2>
+  <h3>🔹 <code>@</code> Operator</h3>
+  <p>Blocks until the event is triggered.</p>
+  <pre><code class="language-verilog">
+@(event_name);              // Traditional event control
+@(event_name.triggered);    // Using .triggered property
+  </code></pre>
+
+  <h3>🔸 <code>wait()</code> with <code>.triggered</code> Property</h3>
+  <p>Checks if event was triggered in the current time step.</p>
+  <pre><code class="language-verilog">
+wait(event_name.triggered);
+  </code></pre>
+
+  <h3>🧪 Example:</h3>
+  <pre><code class="language-verilog">
+module tb;
+  event start_signal;
+
+  initial begin
+    $display("[%0t] 🚀 Process 1: Triggering event", $time);
+    ->start_signal;
+  end
+
+  initial begin
+    #1;
+    $display("[%0t] 🕒 Process 2: Waiting using @", $time);
+    @(start_signal);  
+    $display("[%0t] 🟢 Process 2: Event triggered!", $time);
+  end
+
+  initial begin
+    #1;
+    $display("[%0t] 🕒 Process 3: Waiting using wait(triggered)", $time);
+    wait(start_signal.triggered);  
+    $display("[%0t] ✅ Process 3: Event triggered!", $time);
+  end
+endmodule
+  </code></pre>
+
+  <h3>📋 Expected Output:</h3>
+  <pre><code class="language-csharp">
+[0] 🚀 Process 1: Triggering event
+[1] 🕒 Process 2: Waiting using @
+[1] 🕒 Process 3: Waiting using wait(triggered)
+[1] ✅ Process 3: Event triggered!
+  </code></pre>
+
+  <p>⚠️ Notice how Process 2 is stuck forever because @ didn't detect the event (it already happened before @ was evaluated).</p>
+
+  <h3>👨‍🏫 Real-Life Analogy: Doorbell Listener</h3>
+  <ul>
+    <li>Person A (<code>@</code> operator): Starts listening *after* doorbell — ❌ missed it</li>
+    <li>Person B (<code>wait(triggered)</code>): Sees the doorbell light even after it rings — ✅ catches it</li>
+  </ul>
+
+  <h3>🧠 Key Takeaways:</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>@ Operator</th>
+        <th>wait(event.triggered)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Race Safe?</td>
+        <td>❌ No</td>
+        <td>✅ Yes</td>
+      </tr>
+      <tr>
+        <td>Unblocks when?</td>
+        <td>Only if already waiting</td>
+        <td>Anytime in same timestep</td>
+      </tr>
+      <tr>
+        <td>Use When?</td>
+        <td>You're sure trigger is later</td>
+        <td>Trigger timing is uncertain</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+<br> <br>
+
+  <h2>🔄 Difference between @ and .triggered in SystemVerilog</h2>
+  <p>In SystemVerilog, both <code>@</code> and <code>.triggered</code> are used to wait for events. However, they behave differently when the trigger and wait happen at the same time.</p>
+
+  <h2>🛠️ @ Operator</h2>
+  <pre><code class="language-verilog">
+@(event_name);
+  </code></pre>
+  <ul>
+    <li>Blocks until the event is triggered.</li>
+    <li>Must be executed before the event is triggered in the same time step.</li>
+    <li>If not already waiting, it misses the event — ❌ doesn't unblock.</li>
+  </ul>
+
+  <h2>🔎 .triggered Property with wait()</h2>
+  <pre><code class="language-verilog">
+wait(event_name.triggered);
+  </code></pre>
+  <ul>
+    <li>Checks if the event has already been triggered in this time step.</li>
+    <li>Even if the wait is executed after the trigger (in same timestep), it still unblocks — ✅ safe from race.</li>
+  </ul>
+
+  <h2>⚠️ Race Condition Explanation</h2>
+  <p>If both trigger and wait happen at the same time (same #delay), there's a race.</p>
+  <ul>
+    <li>If the trigger executes first, and the process uses <code>@</code>, it won't detect the trigger.</li>
+    <li>But if the process uses <code>.triggered</code>, it still sees the event.</li>
+  </ul>
+
+  <h2>👨‍🏫 Real-Life Analogy</h2>
+  <p>📞 <strong>Event = Phone Call</strong></p>
+  <ul>
+    <li><code>@</code> is like answering the phone only if you're already listening for the ring. If the phone rings before you pick up, you miss it. 📵</li>
+    <li><code>.triggered</code> is like seeing a missed call notification. Even if you weren’t listening, you know someone called. ✅</li>
+  </ul>
+
+  <h2>🧪 Code Example: When @ Misses the Event</h2>
+  <pre><code class="language-verilog">
+module tb;
+  event bell;
+
+  // Trigger the event at 0ns
+  initial begin
+    ->bell;
+    $display("[%0t] 🔔 Event triggered", $time);
+  end
+
+  // Process A: Uses @ (misses the event)
+  initial begin
+    #1;
+    $display("[%0t] 🧏 Process A: Waiting using @", $time);
+    @(bell);
+    $display("[%0t] ✅ Process A: Received event!", $time);
+  end
+
+  // Process B: Uses wait(bell.triggered)
+  initial begin
+    #1;
+    $display("[%0t] 👀 Process B: Waiting using .triggered", $time);
+    wait(bell.triggered);
+    $display("[%0t] ✅ Process B: Received event!", $time);
+  end
+endmodule
+  </code></pre>
+
+  <h2>🧾 Simulation Log</h2>
+  <pre><code class="language-csharp">
+[0] 🔔 Event triggered
+[1] 🧏 Process A: Waiting using @
+[1] 👀 Process B: Waiting using .triggered
+[1] ✅ Process B: Received event!
+  </code></pre>
+
+  <h2>✅ Summary Table</h2>
+  <table>
+    <tr><th>Feature</th><th>@ event</th><th>wait(event.triggered)</th></tr>
+    <tr><td>Race-safe?</td><td>❌ No</td><td>✅ Yes</td></tr>
+    <tr><td>Must wait before trigger?</td><td>✅ Yes</td><td>❌ No</td></tr>
+    <tr><td>Can miss event?</td><td>✅ Yes</td><td>❌ No</td></tr>
+    <tr><td>Use for?</td><td>Predictable timing</td><td>Safe waiting under race</td></tr>
+  </table>
+<br> <br>
+  <h2>📌 Example: The Event Waiting with @ Operator</h2>
+  <p><strong>💡 Concept:</strong> A process waits for an event that is triggered later — works fine.</p>
+  <p><strong>👨‍🍳 Analogy:</strong> A chef waits for the oven timer. The oven triggers the bell at the right time.</p>
+
+  <pre><code class="language-verilog">
+module tb;
+
+  event oven_timer;
+
+  // Process 1: Trigger the event (oven timer rings)
+  initial begin
+    #30;
+    $display("[%0t] 🔔 Oven timer rings!", $time);
+    ->oven_timer;
+  end
+
+  // Process 2: Wait for the oven timer
+  initial begin
+    $display("[%0t] 👨‍🍳 Chef is waiting for the oven timer...", $time);
+    @(oven_timer);
+    $display("[%0t] 🍰 Chef takes the cake out!", $time);
+  end
+
+endmodule
+  </code></pre>
+
+  <h2>📤 Simulation Output</h2>
+  <pre><code class="language-csharp">
+[0] 👨‍🍳 Chef is waiting for the oven timer...
+[30] 🔔 Oven timer rings!
+[30] 🍰 Chef takes the cake out!
+  </code></pre>
+
+  <p>✅ <strong>Summary:</strong> This is a normal case where @ works fine because the wait begins before the trigger.</p>
+<br> <br>
+  <h2>🔁 Example: Trigger First, Then Wait — Missed the Bus!</h2>
+  <p><strong>💡 Concept:</strong> If the event is triggered before <code>@</code> is used, it is missed forever.</p>
+  <p><strong>🚍 Analogy:</strong> You reach the bus stop at 8:10 AM but the bus left at 8:00 AM — you missed it!</p>
+
+  <pre><code class="language-verilog">
+module tb;
+
+  event bus_departed;
+
+  // Process 1: Bus leaves at 40ns
+  initial begin
+    #40;
+    $display("[%0t] 🚌 The bus has departed!", $time);
+    ->bus_departed;
+  end
+
+  // Process 2: Person reaches stop at 60ns and waits for the bus
+  initial begin
+    #60;
+    $display("[%0t] 🚶 Person arrives at the bus stop", $time);
+    @(bus_departed);  // Misses the trigger!
+    $display("[%0t] 🎉 Person boards the bus (never printed)", $time);
+  end
+
+  // End simulation
+  initial begin
+    #100;
+    $display("[%0t] 🕛 Ending the simulation", $time);
+    $finish;
+  end
+
+endmodule
+  </code></pre>
+
+  <h2>📤 Simulation Output</h2>
+  <pre><code class="language-csharp">
+[40] 🚌 The bus has departed!
+[60] 🚶 Person arrives at the bus stop
+[100] 🕛 Ending the simulation
+  </code></pre>
+
+  <p>🎯 <strong>Note:</strong> The message about boarding the bus never prints because the <code>@</code> missed the event.</p>
+
+  <h2>✅ Final Takeaway</h2>
+  <ul>
+    <li><code>@</code> only works if you are already waiting.</li>
+    <li><code>.triggered</code> is safer in race situations — it sees already-triggered events in the same timestep.</li>
+  </ul>
+
+<br> <br>
+
+<h1>✅ Trigger & Wait at the Same Time in SystemVerilog</h1>
+  <h2>🚦 Real-Life Analogy</h2>
+  <p>Imagine two friends are in the same room:</p>
+  <ul>
+    <li>👋 One says "Go!" (triggering the event)</li>
+    <li>🏃 The other is already listening for "Go!" (waiting)</li>
+  </ul>
+  <p>But there's a catch:</p>
+  <ul>
+    <li>If the listener uses headphones with a delay (<code>@</code> operator), they might miss it.</li>
+    <li>If the listener is alert and watching (<code>wait</code> operator), they'll catch it instantly!</li>
+  </ul>
+
+  <h3>✅ Good Case — Using <code>wait(ev.triggered)</code></h3>
+  <pre><code class="language-verilog">
+module tb;
+
+  event ready;
+
+  initial begin
+    fork
+      // Process 1: triggers the event
+      begin
+        $display("[%0t] 🔔 Triggering event now!", $time);
+        ->ready;
+      end
+
+      // Process 2: waits for the event using wait()
+      begin
+        $display("[%0t] 👀 Waiting using wait()", $time);
+        wait(ready.triggered);  // Safe
+        $display("[%0t] ✅ Event caught using wait()", $time);
+      end
+    join
+  end
+
+endmodule
+  </code></pre>
+
+  <h4>📤 Output</h4>
+  <pre><code class="language-csharp">
+[0] 🔔 Triggering event now!
+[0] 👀 Waiting using wait()
+[0] ✅ Event caught using wait()
+  </code></pre>
+
+  <h3>❌ Bad Case — Using <code>@(ready)</code> (Might Miss It!)</h3>
+  <pre><code class="language-verilog">
+module tb;
+
+  event ready;
+
+  initial begin
+    fork
+      // Process 1: triggers the event
+      begin
+        $display("[%0t] 🔔 Triggering event now!", $time);
+        ->ready;
+      end
+
+      // Process 2: waits for the event using @
+      begin
+        $display("[%0t] 👂 Waiting using @()", $time);
+        @(ready);  // Might miss it!
+        $display("[%0t] ❌ Missed or caught the event (depends)", $time);
+      end
+    join
+  end
+
+endmodule
+  </code></pre>
+
+  <h4>📤 Output (Typical)</h4>
+  <pre><code class="language-csharp">
+[0] 🔔 Triggering event now!
+[0] 👂 Waiting using @()
+  </code></pre>
+  <p>The message ❌ doesn't appear — the process is stuck waiting forever because <code>@</code> missed the event fired in the same timestep.</p>
+
+  <h3>💡 Summary</h3>
+  <table>
+    <tr><th>Operator</th><th>Safe When Trigger & Wait Same Time?</th><th>Behavior</th></tr>
+    <tr><td><code>wait(ev.triggered)</code></td><td>✅ Yes</td><td>Always catches event</td></tr>
+    <tr><td><code>@(ev)</code></td><td>❌ No</td><td>Might miss the event</td></tr>
+  </table>
+<br> <br>
+  <h2>🔗 Merging Events</h2>
+  <p><strong>What is Merging Events?</strong></p>
+  <p>When you assign one event variable to another, they both reference the same synchronization object. This means:</p>
+  <ul>
+    <li>Triggering one event → also triggers the other.</li>
+    <li>Waiting on either → will unblock when either is triggered.</li>
+  </ul>
+
+  <pre><code class="language-systemverilog">
+event A, B;
+B = A;  // Now A and B refer to the same event object
+  </code></pre>
+
+  <h3>🎯 Real-Life Analogy</h3>
+  <p>Imagine you're in a WhatsApp group 📱. You have two names saved for the same person: "John Work" and "John Gym".</p>
+  <p>If John sends a message (triggers an event), it shows up in both contact names! 📩</p>
+
+  <h3>✅ Example: Merged Events Trigger Together</h3>
+  <pre><code class="language-verilog">
+module tb;
+  event start_A, start_B;
+
+  initial begin
+    fork
+      // Thread-1: Waits for event A
+      begin
+        wait(start_A.triggered);
+        $display("[%0t] ✅ Thread-1: start_A was triggered!", $time);
+      end
+
+      // Thread-2: Waits for event B
+      begin
+        wait(start_B.triggered);
+        $display("[%0t] ✅ Thread-2: start_B was triggered!", $time);
+      end
+
+      // Thread-3: Merges B to A at 5ns
+      begin
+        #5;
+        $display("[%0t] 🔗 Merging start_B to start_A", $time);
+        start_B = start_A;
+      end
+
+      // Thread-4: Triggers start_A at 10ns
+      begin
+        #10;
+        $display("[%0t] 🚀 Triggering start_A", $time);
+        ->start_A;
+      end
+    join
+  end
+endmodule
+  </code></pre>
+
+  <h4>📤 Simulation Output</h4>
+  <pre><code class="language-csharp">
+[5] 🔗 Merging start_B to start_A
+[10] 🚀 Triggering start_A
+[10] ✅ Thread-1: start_A was triggered!
+[10] ✅ Thread-2: start_B was triggered!
+  </code></pre>
+
+  <h3>💡 Key Points</h3>
+  <ul>
+    <li><code>start_B = start_A</code> means both point to same event 🧷</li>
+    <li><code>->start_A</code> triggers both A and B listeners 💥</li>
+    <li>Useful for synchronizing multiple parallel tasks with a shared signal</li>
+  </ul>
+<br> <br>
+  <h2>🔁 wait_order – Enforcing Sequence in Event Triggers</h2>
+  <p><strong>What is wait_order?</strong></p>
+  <p><code>wait_order</code> is a SystemVerilog synchronization construct that ensures multiple events are triggered in a specific order. If the sequence breaks, the <code>else</code> clause is executed.</p>
+
+  <h3>🔍 Syntax</h3>
+  <pre><code class="language-verilog">
+wait_order(event1, event2, event3)
+  // success code
+else
+  // failure code
+  </code></pre>
+
+  <h3>💡 Real-Life Analogy</h3>
+  <p>Imagine an assembly line 🏭:</p>
+  <ul>
+    <li>Station A checks parts,</li>
+    <li>Station B assembles them,</li>
+    <li>Station C tests them.</li>
+  </ul>
+  <p>If a part skips or visits a station in the wrong order, the system flags an error.</p>
+
+  <h3>✅ Example: Correct Order of Event Triggers</h3>
+  <pre><code class="language-verilog">
+module tb_wait_order;
+  event e1, e2, e3;
+
+  initial begin
+    fork
+      // Trigger e1 after 5ns
+      begin
+        #5;
+        $display("[%0t] 🚀 Triggering e1", $time);
+        ->e1;
+      end
+
+      // Trigger e2 after 10ns
+      begin
+        #10;
+        $display("[%0t] 🚀 Triggering e2", $time);
+        ->e2;
+      end
+
+      // Trigger e3 after 15ns
+      begin
+        #15;
+        $display("[%0t] 🚀 Triggering e3", $time);
+        ->e3;
+      end
+
+      // Wait for e1 → e2 → e3 in order
+      begin
+        $display("[%0t] ⏳ Waiting for ordered trigger of e1, e2, e3", $time);
+        wait_order(e1, e2, e3)
+          $display("[%0t] ✅ Events triggered in correct order!", $time);
+        else
+          $display("[%0t] ❌ Events triggered out of order!", $time);
+      end
+    join
+  end
+endmodule
+  </code></pre>
+
+  <h4>📤 Output</h4>
+  <pre><code class="language-csharp">
+[0] ⏳ Waiting for ordered trigger of e1, e2, e3
+[5] 🚀 Triggering e1
+[10] 🚀 Triggering e2
+[15] 🚀 Triggering e3
+[15] ✅ Events triggered in correct order!
+  </code></pre>
+
+  <h3>❌ Example: Out-of-Order Triggers</h3>
+  <p>Change <code>#5 -> e1</code> to <code>#5 -> e3</code> and you’ll get:</p>
+  <pre><code class="language-csharp">
+[5] 🚀 Triggering e3
+[5] ❌ Events triggered out of order!
+[10] 🚀 Triggering e1
+[15] 🚀 Triggering e2
+  </code></pre>
+
+  <h3>🧠 Use Cases</h3>
+  <ul>
+    <li>Sequencing transaction phases</li>
+    <li>Ordered protocol handshakes</li>
+    <li>Pipeline phase verification</li>
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svIntroductiontoIPC.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Introduction to IPC
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svSemaphore.html" style="text-decoration: none; color: var(--link);">
+      Next:  Semaphore  →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

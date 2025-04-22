@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Issues with logic - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-systemverilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🧠 Issues with logic in SystemVerilog</h1>
+    <p>SystemVerilog introduced the <code>logic</code> keyword to overcome limitations of <code>reg</code> and <code>wire</code>. However, incorrect usage can still lead to unpredictable behavior, compilation errors, or race conditions. Below are common pitfalls:</p>
+
+    <h2>1. Multiple Driver Issue with <code>wire</code></h2>
+    <p><strong>🔍 Description:</strong><br>
+    Occurs when multiple sources drive the same <code>wire</code>, leading to undefined behavior.</p>
+
+    <p><strong>🧪 Example:</strong></p>
+    <pre><code class="language-systemverilog">
+wire w0, w1, w2;
+assign w0 = w1;
+assign w0 = w2;
+</code></pre>
+
+    <p><strong>📘 Explanation:</strong><br>
+    <code>wire</code> is a resolved data type, so multiple drivers are technically allowed. Conflicts are resolved using wired logic, but the outcome can vary depending on simulator behavior.</p>
+
+    <p><strong>🧠 Real-Life Analogy:</strong><br>
+    Imagine two people giving you instructions at the same time—confusion is inevitable.</p>
+
+    <h2>2. Multiple Driver Issue with <code>logic</code></h2>
+    <p><strong>🔍 Description:</strong><br>
+    <code>logic</code> does not support multiple drivers. Doing so causes compilation errors.</p>
+
+    <p><strong>🧪 Example:</strong></p>
+    <pre><code class="language-systemverilog">
+logic l0, l1, l2;
+assign l0 = l1;
+assign l0 = l2;
+</code></pre>
+
+    <p><strong>📘 Explanation:</strong><br>
+    <code>l0</code> cannot be driven by two continuous assignments.</p>
+
+    <p><strong>✅ Solution:</strong></p>
+    <pre><code class="language-systemverilog">
+logic l0;
+always @(*) begin
+  l0 = l1 | l2;  // Combine using OR
+end
+</code></pre>
+
+    <p><strong>🧠 Real-Life Analogy:</strong><br>
+    A single light bulb controlled by two power sources—something will break.</p>
+
+    <h2>3. Mixed Continuous and Procedural Assignments</h2>
+    <p><strong>🔍 Description:</strong><br>
+    Mixing <code>assign</code> and <code>always</code> blocks to the same <code>logic</code> variable is illegal.</p>
+
+    <p><strong>🧪 Example:</strong></p>
+    <pre><code class="language-systemverilog">
+logic l0;
+assign l0 = 1'b0;
+always @(posedge clk)
+  l0 = 1'b1;
+</code></pre>
+
+    <p><strong>📘 Explanation:</strong><br>
+    This causes a multiple driver conflict.</p>
+
+    <p><strong>✅ Solution:</strong></p>
+    <pre><code class="language-systemverilog">
+logic l0;
+always @(posedge clk)
+  l0 <= 1'b1;
+</code></pre>
+
+    <p><strong>🧠 Real-Life Analogy:</strong><br>
+    Like switching between manual and automatic transmission—confusing and dangerous.</p>
+
+    <h2>4. Race-Around Condition in <code>initial</code> Blocks</h2>
+    <p><strong>🔍 Description:</strong><br>
+    Two <code>initial</code> blocks assigning to the same signal at the same time causes non-determinism.</p>
+
+    <p><strong>🧪 Example:</strong></p>
+    <pre><code class="language-systemverilog">
+logic l0;
+initial l0 = 1'b0;
+initial l0 = 1'b1;
+</code></pre>
+
+    <p><strong>📘 Explanation:</strong><br>
+    Execution order is simulator dependent—result is unpredictable.</p>
+
+    <p><strong>✅ Solution:</strong></p>
+    <pre><code class="language-systemverilog">
+logic l0;
+initial begin
+  #10 l0 = 1'b1;
+end
+</code></pre>
+
+    <p><strong>🧠 Real-Life Analogy:</strong><br>
+    Two alarms go off at the same time—only one will catch your attention.</p>
+
+    <h2>5. Race Condition in <code>always</code> Blocks</h2>
+    <p><strong>🔍 Description:</strong><br>
+    Multiple <code>always</code> blocks writing to the same signal simultaneously creates race conditions.</p>
+
+    <p><strong>🧪 Example:</strong></p>
+    <pre><code class="language-systemverilog">
+logic l0;
+
+always @(posedge clk) l0 = 1'b1;
+always @(posedge clk) l0 = 1'b0;
+</code></pre>
+
+    <p><strong>📘 Explanation:</strong><br>
+    Final value of <code>l0</code> is unknown—depends on simulator’s execution order.</p>
+
+    <p><strong>✅ Solution:</strong></p>
+    <pre><code class="language-systemverilog">
+logic l0;
+always @(posedge clk)
+  l0 <= some_condition ? 1'b1 : 1'b0;
+</code></pre>
+
+    <p><strong>🧠 Real-Life Analogy:</strong><br>
+    Two chefs seasoning the same dish at the same time—you don't know how it'll taste.</p>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") {
+        document.body.classList.add("dark");
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    }
+  </script>
+
+  <!-- Navigation Links -->
+  <div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <a href="svhardwaredatatypes.html" style="text-decoration: none; color: var(--link);">
+        ← Back to Hardware Data Types
+      </a>
+      <span style="color: var(--text);">|</span>
+      <a href="svvariable.html" style="text-decoration: none; color: var(--link);">
+        Next: Variable Data Types →
+      </a>
+    </div>
+    <div style="margin-top: 8px;">
+      <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+        ↩ Return to System Verilog Home
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>

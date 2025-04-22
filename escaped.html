@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Escaped Identifiers - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- Prism.js for syntax highlighting -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, ul {
+      line-height: 1.6;
+    }
+
+    img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    pre {
+      background: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid var(--text);
+      text-align: left;
+    }
+
+    th {
+      background: var(--card);
+    }
+
+    .return-link {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .return-link a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .return-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html"><img src="logo.png" alt="VLSI Labs Logo" class="logo"></a>
+    <a href="veriloghome.html"><img src="header.png" alt="Header Banner" class="header-image"></a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🔠 Escaped Identifiers</h1>
+
+    <p>In Verilog, most identifiers (like variable names, module names, etc.) follow typical rules—like starting with a letter, using only letters, digits, or underscores.</p>
+
+    <p>But sometimes you might want to use a name that doesn't follow the standard rules—maybe it has a space, symbol, or starts with a number. In such cases, you can use an <strong>escaped identifier</strong>.</p>
+
+    <h2>💡 What is an Escaped Identifier?</h2>
+    <p>An escaped identifier lets you use special characters or reserved words as names.</p>
+
+    <h2>🧾 Syntax:</h2>
+    <pre><code>\name_with_special_chars[space]</code></pre>
+    <p><strong>⚠️ The backslash (<code>\</code>) is used before the name, and it must be followed by a space or newline to mark the end.</strong></p>
+
+    <h2>📌 Examples:</h2>
+    <pre><code class="language-verilog">module \adder-32bit ();     // Module name has a dash
+wire \data in;              // Space inside wire name
+reg \123value;              // Starts with a number
+</code></pre>
+
+    <h2>🔍 Explanation:</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Identifier Used</th>
+          <th>Normal?</th>
+          <th>Escaped Identifier?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>\adder-32bit</td>
+          <td>❌ Not allowed normally</td>
+          <td>✅ Yes</td>
+        </tr>
+        <tr>
+          <td>\data in</td>
+          <td>❌ Space not allowed</td>
+          <td>✅ Yes</td>
+        </tr>
+        <tr>
+          <td>\123value</td>
+          <td>❌ Starts with digit</td>
+          <td>✅ Yes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Notice:</strong> There's always a space at the end. Without it, Verilog won’t know where the identifier ends.</p>
+
+    <h2>🧠 Real-Life Analogy:</h2>
+    <p>Imagine naming a file on your computer. Usually, you're not allowed to use characters like <code>*</code>, <code>?</code>, or start a file name with a number.</p>
+
+    <p>But what if your system had a "special mode" that let you use any name—like wrapping the name in quotes?</p>
+
+    <p>Similarly, escaped identifiers are Verilog’s way of saying: “Hey, allow this weird name.”</p>
+
+    <h2>🛠️ When to Use:</h2>
+    <ul>
+      <li>When port or signal names are copied from external specs with unusual formatting</li>
+      <li>When using keywords as identifiers (like <code>\module</code> or <code>\if</code>)</li>
+      <li>When names have spaces or special characters (common in auto-generated code)</li>
+    </ul>
+
+    <div class="nav-links">
+      <a href="whitespace.html">← Back to White Spaces, Comments</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="number.html">Next: Number Specification →</a>
+    </div>
+
+    <div class="return-link">
+      <a href="veriloghome.html">↩ Return to Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

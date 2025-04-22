@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>2-State vs 4-State Data Types in SystemVerilog data types - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>2-State vs 4-State Data Types in SystemVerilog</h1>
+    <p>SystemVerilog provides 2-state and 4-state data types, mainly used to improve simulation efficiency and represent real hardware behavior accurately.</p>
+
+    <h2>1. 4-State Data Types (logic, reg, bit, integer)</h2>
+    <p>A 4-state data type can represent:</p>
+    <ul>
+      <li><strong>0</strong> → Logic Low</li>
+      <li><strong>1</strong> → Logic High</li>
+      <li><strong>X</strong> → Unknown (Indeterminate value)</li>
+      <li><strong>Z</strong> → High Impedance (Floating value)</li>
+    </ul>
+    <p>✅ <strong>Used for:</strong> Modeling real hardware behavior, especially in RTL (Register Transfer Level) design.</p>
+    <p>📌 <strong>Examples of 4-state variables:</strong></p>
+    <pre><code class="language-verilog">
+logic a;   // Can take values 0, 1, X, Z
+reg b;     // Also 4-state (legacy Verilog)
+integer c; // Stores signed 32-bit, but can have X/Z
+</code></pre>
+    <p>🔴 <strong>Downside:</strong></p>
+    <ul>
+      <li>Slower simulation due to extra processing of X and Z.</li>
+      <li>X propagation can cause unintended issues.</li>
+    </ul>
+
+    <h2>2. 2-State Data Types (bit, int, shortint)</h2>
+    <p>A 2-state data type can only store:</p>
+    <ul>
+      <li><strong>0</strong> → Logic Low</li>
+      <li><strong>1</strong> → Logic High</li>
+    </ul>
+    <p>✅ <strong>Used for:</strong></p>
+    <ul>
+      <li>Testbenches (faster simulation, as unknown states are not needed).</li>
+      <li>Pure combinational logic (where X and Z are unnecessary).</li>
+    </ul>
+    <p>📌 <strong>Examples of 2-state variables:</strong></p>
+    <pre><code class="language-verilog">
+bit x;        // Only stores 0 or 1 (no X or Z)
+bit [3:0] y;  // 4-bit wide, always 0 or 1
+int counter;  // 32-bit signed integer, only 0 or 1 values
+</code></pre>
+    <p>✅ <strong>Advantages:</strong></p>
+    <ul>
+      <li>Faster simulation (no X/Z states to process).</li>
+      <li>Less memory usage (important for large testbenches).</li>
+    </ul>
+    <p>🔴 <strong>Limitations:</strong></p>
+    <ul>
+      <li>Cannot model X or Z, which are needed for RTL.</li>
+      <li>Not suitable for synthesizable hardware models.</li>
+    </ul>
+
+<h2>3. When to Use 2-State vs 4-State Data Types</h2>
+<table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse: collapse; background-color: var(--card); color: var(--text);">
+  <thead>
+    <tr style="background-color: var(--accent); color: white;">
+      <th>Feature</th>
+      <th>2-State (bit, int)</th>
+      <th>4-State (logic, reg, integer)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Can take X/Z values?</td>
+      <td>❌ No</td>
+      <td>✅ Yes</td>
+    </tr>
+    <tr>
+      <td>Simulation speed</td>
+      <td>🚀 Faster</td>
+      <td>🐢 Slower</td>
+    </tr>
+    <tr>
+      <td>Used in testbenches?</td>
+      <td>✅ Yes</td>
+      <td>✅ Yes</td>
+    </tr>
+    <tr>
+      <td>Used in synthesizable RTL?</td>
+      <td>❌ No</td>
+      <td>✅ Yes</td>
+    </tr>
+    <tr>
+      <td>Memory usage</td>
+      <td>🔽 Low</td>
+      <td>🔼 High</td>
+    </tr>
+    <tr>
+      <td>Best for hardware modeling?</td>
+      <td>❌ No</td>
+      <td>✅ Yes</td>
+    </tr>
+  </tbody>
+</table>
+
+
+    <h2>4. Example Usage</h2>
+    <h3>4-State Example (RTL Design)</h3>
+    <pre><code class="language-verilog">
+module rtl_example;
+  logic [3:0] data; // Can hold 0, 1, X, Z
+  initial begin
+    data = 4'b1010;
+    #10 data = 4'bZZZZ; // High impedance state
+    #10 data = 4'bXXXX; // Unknown state
+  end
+endmodule
+</code></pre>
+
+    <h3>2-State Example (Testbench)</h3>
+    <pre><code class="language-verilog">
+module testbench;
+  bit [3:0] test_data; // Only stores 0 and 1
+  initial begin
+    test_data = 4'b1010;
+    #10 test_data = 4'b1111; // No X/Z allowed
+  end
+endmodule
+</code></pre>
+
+    <h2>5. Key Takeaways</h2>
+    <ul>
+      <li>Use <strong>4-state (logic)</strong> for RTL design, as real hardware can have X and Z states.</li>
+      <li>Use <strong>2-state (bit)</strong> for testbenches, since X/Z are unnecessary, making simulations faster.</li>
+      <li>Use <strong>bit</strong> instead of <strong>reg</strong> in testbenches for better performance.</li>
+      <li>Avoid <strong>integer</strong> in RTL because it allows X/Z, leading to unpredictable behavior in synthesis.</li>
+    </ul>
+
+    <p>🚀 <strong>Rule of Thumb:</strong><br>
+    RTL (Synthesis)? → <code>logic</code> (4-state) ✅<br>
+    Testbench (Simulation)? → <code>bit</code> (2-state) ✅</p>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
+<script>
+  // Load theme on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svdatatypesflowchart.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Datatypes Flowchart
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svhardwaredatatypes.html" style="text-decoration: none; color: var(--link);">
+      Next: Hardware Data Types →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

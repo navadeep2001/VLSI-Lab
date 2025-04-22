@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Over flow and under flow in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-systemverilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+<main>
+  <h1>🌊 Overflow and Underflow in Signed vs Unsigned Data Types</h2>
+  <p>When performing arithmetic operations like adding 1 to the maximum value or subtracting 1 from the minimum value, we can encounter overflow and underflow issues.</p>
+
+  <h3>1. Unsigned Overflow and Underflow</h3>
+  <p><strong>Overflow:</strong> If an unsigned value exceeds its maximum range, it wraps around to 0.</p>
+  <p><strong>Underflow:</strong> If you subtract 1 from 0, it wraps around to the maximum value.</p>
+
+  <p><strong>Example (8-bit Unsigned):</strong></p>
+  <pre><code class="language-systemverilog">
+logic [7:0] a = 8'b11111111; // 255 (Max for 8-bit unsigned)
+logic [7:0] b = 8'b00000000; // 0   (Min for 8-bit unsigned)
+
+initial begin
+    $display("Unsigned Overflow: %d", a + 1);  // 0 (Wraps around)
+    $display("Unsigned Underflow: %d", b - 1); // 255 (Wraps around)
+end
+</code></pre>
+
+  <p>🔹 <strong>Results:</strong></p>
+  <ul>
+    <li>255 + 1 = 0 (Overflow)</li>
+    <li>0 - 1 = 255 (Underflow)</li>
+  </ul>
+
+  <h3>2. Signed Overflow and Underflow</h3>
+  <p><strong>Overflow:</strong> If a signed value exceeds its maximum range, it wraps into a negative number.</p>
+  <p><strong>Underflow:</strong> If a signed value goes below its minimum, it wraps into a positive number.</p>
+
+  <p><strong>Example (8-bit Signed):</strong></p>
+  <pre><code class="language-systemverilog">
+logic signed [7:0] x = 8'sb01111111; // 127 (Max for 8-bit signed)
+logic signed [7:0] y = 8'sb10000000; // -128 (Min for 8-bit signed)
+
+initial begin
+    $display("Signed Overflow: %d", x + 1);  // -128 (Wraps around)
+    $display("Signed Underflow: %d", y - 1); // 127 (Wraps around)
+end
+</code></pre>
+
+  <p>🔹 <strong>Results:</strong></p>
+  <ul>
+    <li>127 + 1 = -128 (Overflow)</li>
+    <li>-128 - 1 = 127 (Underflow)</li>
+  </ul>
+
+  <h3>⚠️ Why does this happen?</h3>
+  <p>SystemVerilog uses Two’s Complement Representation for signed numbers. When adding or subtracting, it doesn't generate errors but wraps the number cyclically.</p>
+
+  <h3>3. Detecting Overflow and Underflow</h3>
+  <p>You can detect overflow/underflow using SystemVerilog properties:</p>
+
+  <p><strong>Detecting Overflow (Signed)</strong></p>
+  <pre><code class="language-systemverilog">
+logic signed [7:0] a = 127, b = 1;
+logic signed [7:0] result;
+
+initial begin
+    result = a + b;
+    if ((a > 0 && b > 0 && result < 0)) 
+        $display("Overflow detected!");
+end
+</code></pre>
+
+  <p><strong>Detecting Underflow (Signed)</strong></p>
+  <pre><code class="language-systemverilog">
+logic signed [7:0] a = -128, b = -1;
+logic signed [7:0] result;
+
+initial begin
+    result = a + b;
+    if ((a < 0 && b < 0 && result > 0)) 
+        $display("Underflow detected!");
+end
+</code></pre>
+
+  <img src="overflowunderflow.png" alt="Overflow and Underflow Illustration" class="range-img" />
+</main>
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") {
+        document.body.classList.add("dark");
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    }
+  </script>
+
+  <!-- Navigation Links -->
+  <!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svvariable.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Variable Data Types
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svsimulation.html" style="text-decoration: none; color: var(--link);">
+      Next: Simulation Data Types →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+</body>
+</html>

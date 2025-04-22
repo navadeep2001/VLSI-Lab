@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>uniquecase statements in system verilog - VLSI Labs</title>
+<title>unique0 case statements in system verilog - VLSI Labs</title>
+<title>unique1 case statements in system verilog - VLSI Labs</title>
+<title>priority case statements in system verilog - VLSI Labs</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🎯 unique case (Only One Match)</h1>
+  <p><strong>What it does:</strong> Ensures only one branch matches. If multiple branches match, a simulation warning or error occurs.</p>
+  <p><strong>Use when:</strong> You want to make sure that there is no ambiguity in your selection (only one case is selected).</p>
+
+  <h3>📘 Example:</h3>
+  <pre><code class="language-verilog">logic [2:0] sel = 3'b001;
+
+unique case (sel)
+  3'b000: $display("Zero selected");
+  3'b001: $display("One selected");  // ✅ prints this
+  3'b010: $display("Two selected");
+  default: $display("Other");
+endcase</code></pre>
+  <p>In this example, <code>unique case</code> ensures that if multiple branches matched, the simulation would warn you.</p>
+<br>
+  <h1>🎲❌ unique0 case (Zero or One Match)</h1>
+  <p><strong>What it does:</strong> Ensures no more than one branch matches. If more than one match occurs, it gives an error. But if no branches match, it's fine.</p>
+  <p><strong>Use when:</strong> You expect that there should always be exactly one match or no match at all.</p>
+
+  <h3>📘 Example:</h3>
+  <pre><code class="language-verilog">logic [2:0] sel = 3'b010;
+
+unique0 case (sel)
+  3'b000: $display("Zero selected");
+  3'b001: $display("One selected");
+  3'b010: $display("Two selected");  // ✅ prints this
+  default: $display("Other");
+endcase</code></pre>
+  <p>This will warn if more than one case matches, but it will work fine if no case matches.</p>
+<br>
+  <h1>🔝 priority case (First Match)</h1>
+  <p><strong>What it does:</strong> The <code>priority case</code> selects the first matching branch from top to bottom, even if multiple branches match.</p>
+  <p><strong>Use when:</strong> You want to ensure the first match is chosen, and don’t mind skipping over other matches that follow.</p>
+
+  <h3>📘 Example:</h3>
+  <pre><code class="language-verilog">logic [2:0] sel = 3'b010;
+
+priority case (sel)
+  3'b000: $display("Zero selected");
+  3'b001: $display("One selected");
+  3'b010: $display("Two selected");  // ✅ prints this
+  3'b011: $display("Three selected");
+  default: $display("Other");
+endcase</code></pre>
+  <p>In this example, if multiple conditions could be true (e.g., <code>3'b010</code> and <code>3'b011</code>), <code>priority case</code> ensures that the first one is selected.</p>
+
+  <h3>📝 Summary</h3>
+  <table>
+    <thead>
+      <tr><th>Keyword</th><th>Behavior</th><th>Use Case</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>unique case</code></td><td>Only one branch should match, or you get a warning/error.</td><td>When exactly one case should be true.</td></tr>
+      <tr><td><code>unique0 case</code></td><td>Zero or one branch should match; multiple matches give an error.</td><td>When no match or one match should occur.</td></tr>
+      <tr><td><code>priority case</code></td><td>Selects the first matching branch. Multiple matches allowed, but only the first one counts.</td><td>When you need the first match to win.</td></tr>
+    </tbody>
+  </table>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svcase.html" style="text-decoration: none; color: var(--link);">
+      ← Back to case, casez, casex
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svBlockingandNon-Blocking.html" style="text-decoration: none; color: var(--link);">
+      Next: Blocking and Non-Blocking →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

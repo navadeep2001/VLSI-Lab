@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>slways in systemverilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🔁 always Block in SystemVerilog</h1>
+  <p>In SystemVerilog, the <code>always</code> block is used to describe both combinational and sequential logic. It triggers whenever the signals in its sensitivity list change. This makes it a fundamental part of digital hardware modeling.</p>
+  <p>We’ll focus on the basic usage of the <code>always</code> block without diving into <code>always_comb</code>, <code>always_ff</code>, or <code>always_latch</code>.</p>
+
+  <h3>🧠 Basic Structure</h3>
+  <pre><code class="language-verilog">always @(sensitivity_list) begin
+  // Logic or assignments
+end</code></pre>
+  <ul>
+    <li><strong>sensitivity_list</strong>: Signals to watch for changes. When any signal changes, the block re-executes.</li>
+    <li><strong>begin ... end</strong>: Marks the scope of the block. Required for multiple statements.</li>
+  </ul>
+
+  <h3>📌 Example 1: Combinational Logic</h3>
+  <pre><code class="language-verilog">module comb_logic(input logic a, b, output logic y);
+  always @(a or b) begin
+    y = a & b;  // AND operation
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong> The block runs whenever <code>a</code> or <code>b</code> changes. The result of <code>a & b</code> is assigned to <code>y</code>.</p>
+
+  <h3>📌 Example 2: Combinational Logic with Multiple Outputs</h3>
+  <pre><code class="language-verilog">module logic_operations(input logic a, b, c, output logic y, z);
+  always @(a or b or c) begin
+    y = a & b;  // AND
+    z = a | c;  // OR
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong> Any change in <code>a</code>, <code>b</code>, or <code>c</code> causes reevaluation. This models combinational logic using blocking assignments.</p>
+
+  <h3>📌 Example 3: Sequential Logic (Clock-Triggered)</h3>
+  <pre><code class="language-verilog">module seq_logic(input logic clk, input logic d, output logic q);
+  always @(posedge clk) begin
+    q = d;
+  end
+endmodule</code></pre>
+  <p>🧠 <strong>Explanation:</strong> The block triggers on the rising edge of <code>clk</code>. The value of <code>d</code> is copied to <code>q</code>.</p>
+
+  <h3>🗂️ Summary of always Block</h3>
+  <ul>
+    <li>✅ Can describe both combinational and sequential logic</li>
+    <li>📶 Sensitivity list defines when the block executes</li>
+    <li>🧮 Use for combinational logic by listing all input signals</li>
+    <li>⏰ Use edge-triggered (like <code>posedge clk</code>) for sequential logic</li>
+    <li>⚠️ Use blocking (<code>=</code>) for combinational, non-blocking (<code><=</code>) for sequential logic</li>
+  </ul>
+
+  <h3>⚠️ Best Practice</h3>
+  <p>Although the basic <code>always</code> block works, SystemVerilog provides clearer, intent-specific versions:</p>
+  <ul>
+    <li><code>always_comb</code> – for combinational logic</li>
+    <li><code>always_ff</code> – for clocked/sequential logic</li>
+    <li><code>always_latch</code> – for inferred latches (use with caution)</li>
+  </ul>
+  <p>✅ Use these specialized versions for better synthesis results and readability.</p>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svBlockingandNon-Blocking.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Blocking and Non-Blocking
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svalways_comb.html" style="text-decoration: none; color: var(--link);">
+      Next: always_comb (combinational logic) →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

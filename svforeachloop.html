@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>foreach loop in systemverilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🔄 foreach loop</h1>
+  <h3>📖 Definition</h3>
+  <p>A <strong>foreach loop</strong> lets you walk through every element of an array—no need to manually track bounds. It automatically iterates over each valid index in the array (or multi‑dimensional array).</p>
+
+  <h3>🧬 Syntax</h3>
+  <pre><code class="language-verilog">foreach (array[idx])
+    // single statement
+
+foreach (array[idx]) begin
+    // multiple statements
+end</code></pre>
+
+  <h3>🤝 Real‑Life Analogy</h3>
+  <p>Imagine you’re a mail carrier on a street of houses numbered 0…N–1. You don’t need to know how many houses there are—you simply stop at each one in turn. That’s exactly what <code>foreach</code> does: it “visits” each index in your array automatically.</p>
+
+  <h3>🎯 Easy Examples</h3>
+
+  <h4>🧾 1D Array: Summing Prices</h4>
+  <p>You have four items with prices, and you want both to print each price and compute the total.</p>
+  <pre><code class="language-verilog">module tb;
+  int prices[4] = '{100, 150, 200, 250};
+  int total = 0;
+
+  initial begin
+    // Print each price
+    foreach (prices[i])
+      $display("Item[%0d] price = $%0d", i, prices[i]);
+
+    // Sum up the prices
+    foreach (prices[i]) begin
+      total += prices[i];
+      $display("After item[%0d], running total = $%0d", i, total);
+    end
+  end
+endmodule</code></pre>
+
+  <p><strong>🔢 Simulation Output:</strong><br>
+  Item[0] price = $100<br>
+  Item[1] price = $150<br>
+  Item[2] price = $200<br>
+  Item[3] price = $250<br>
+  After item[0], running total = $100<br>
+  After item[1], running total = $250<br>
+  After item[2], running total = $450<br>
+  After item[3], running total = $700</p>
+
+  <h4>🏫 2D Array: Classroom Seat Check</h4>
+  <p>You have a 3×3 seating chart (0 = empty, 1 = occupied). Use nested <code>foreach</code> to mark the main diagonal as reserved (value = 2) and print the chart.</p>
+  <pre><code class="language-verilog">module tb;
+  int seats[3][3] = '{
+    '{0, 1, 0},
+    '{1, 0, 1},
+    '{0, 1, 0}
+  };
+
+  initial begin
+    // Reserve diagonal seats
+    foreach (seats[r][c]) begin
+      if (r == c)
+        seats[r][c] = 2;
+    end
+
+    // Display final seating
+    $display("Seating Chart:");
+    foreach (seats[r]) begin
+      string line = "";
+      foreach (seats[r][c])
+        line = {line, seats[r][c].itoa(), " "};
+      $display(line);
+    end
+  end
+endmodule</code></pre>
+
+  <p><strong>🔢 Simulation Output:</strong><br>
+  Seating Chart:<br>
+  2 1 0 <br>
+  1 2 1 <br>
+  0 1 2 </p>
+
+  <h3>🔑 Key Points</h3>
+  <ul>
+    <li><strong>Auto‑bounds:</strong> No need to call <code>$size()</code> or track indices.</li>
+    <li><strong>Nested loops:</strong> Chain <code>foreach (A[i]) foreach (A[i][j])</code> … for multi‑D arrays.</li>
+    <li><strong>begin…end:</strong> Required if you have more than one statement in the loop body.</li>
+  </ul>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svforloop.html" style="text-decoration: none; color: var(--link);">
+      ← Back to for loop
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svbreakandcontinuestatements.html" style="text-decoration: none; color: var(--link);">
+      Next: break and continue statements →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

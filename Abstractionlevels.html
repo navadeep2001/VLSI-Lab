@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Abstraction Levels - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Abstraction Levels in Hardware Design</h1>
+    <p>Abstraction levels are like layers of detail. Instead of designing a chip all at once, engineers break it down into steps—from big-picture ideas to actual physical silicon. Each level lets you focus on just one part of the problem without worrying about everything else.</p>
+    <p>Think of it like designing a car: you start with the overall concept (number of seats, type of engine), then move on to detailed engineering (designing the engine), then build it piece by piece.</p>
+
+    <h2>1. Architecture Level</h2>
+    <p><strong>What is it?</strong><br>This is the topmost level where we decide what the system should do.</p>
+    <p><strong>What happens here?</strong><br>We break down the system into functional blocks like CPU cores, caches, memory controllers, etc.</p>
+    <p><strong>Real-life analogy:</strong><br>Like planning a house: you decide there will be 3 rooms, a kitchen, and a bathroom, without worrying yet about plumbing or wiring.</p>
+    <ul>
+      <li>4 cores</li>
+      <li>L1 and L2 caches</li>
+      <li>Interconnect for communication between them</li>
+    </ul>
+    <img src="architecture.png" alt="Architecture Level Image">
+
+    <h2>2. RTL Level (Register Transfer Level)</h2>
+    <p><strong>What is it?</strong><br>Here, we describe the actual logic and behavior of each block using a Hardware Description Language like Verilog.</p>
+    <p><strong>What happens here?</strong><br>We write code that describes how data moves through registers, and how combinational logic operates on it.</p>
+    <p><strong>Example Verilog Code (for an ALU):</strong></p>
+    <pre><code class="language-verilog">
+module alu_32b (a, b, operation, result);
+  input [31:0] a, b;
+  input [1:0] operation;
+  output reg [31:0] result;
+
+  always @(a or b or operation) begin
+    case (operation)
+      2'b00: result = a & b;
+      2'b01: result = a | b;
+      2'b10: result = a + b;
+      2'b11: result = a - b;
+    endcase
+  end
+endmodule
+</code></pre>
+
+    <h2>3. Schematic Level (Gate Level)</h2>
+    <p><strong>What is it?</strong><br>Now, RTL code is turned into logic gates (AND, OR, NOT, Flip-Flops, etc.).</p>
+    <p><strong>What happens here?</strong><br>The HDL is synthesized into a circuit made of gates using a standard library.</p>
+    <img src="Schematic.png" alt="Schematic Level Image">
+
+    <h2>4. Transistor Level</h2>
+    <p><strong>What is it?</strong><br>The gates (like NAND) are now built using transistors (CMOS).</p>
+    <p><strong>What happens here?</strong><br>You define how many NMOS/PMOS transistors are used, their sizes, and how they are connected.</p>
+    <ul>
+      <li>2 PMOS transistors on top (in parallel)</li>
+      <li>2 NMOS transistors at the bottom (in series)</li>
+    </ul>
+    <img src="Transistor.png" alt="Transistor Level Image">
+
+    <h2>5. Physical Level (Layout)</h2>
+    <p><strong>What is it?</strong><br>This is the final stage where transistors are laid out physically on silicon.</p>
+    <p><strong>What happens here?</strong><br>The chip is drawn using special design tools (EDA tools) to create patterns for actual fabrication.</p>
+    <ul>
+      <li>Resistance</li>
+      <li>Capacitance</li>
+      <li>Parasitics</li>
+      <li>Silicon area</li>
+      <li>Heat dissipation</li>
+    </ul>
+    <img src="Physical.png" alt="Physical Level Image">
+
+    <div class="nav-links">
+      <a href="ASICFPGA.html">← Back to ASIC vs FPGA Design Flow</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="topdown.html">Next: Top-down vs Bottom-up Design →</a>
+      <br><br>
+      <a href="veriloghome.html">↩ Return to Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

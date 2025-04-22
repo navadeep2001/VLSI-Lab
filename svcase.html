@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>case statement in systemverilog and verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🔍 case (Exact Match)</h1>
+  <p><strong>What it does:</strong> Compares every bit exactly.</p>
+  <p><strong>Unknowns (X/Z):</strong> are treated like real values, not wildcards.</p>
+  <p><strong>Use when:</strong> you need a precise match and want mismatches flagged.</p>
+
+  <h3>📘 Example:</h3>
+  <pre><code class="language-verilog">logic [1:0] sel = 2'b01;
+
+case (sel)
+  2'b00: $display("Zero selected");
+  2'b01: $display("One selected");     // ✅ prints this
+  2'b10: $display("Two selected");
+  default: $display("Other");
+endcase</code></pre>
+<br>
+  <h1>🕵️ casez (Wildcard ‘Z’)</h1>
+  <p><strong>What it does:</strong> Treats any Z (high‑impedance) or ? in case items as “don’t care.”</p>
+  <p><strong>X’s:</strong> are still real—only Z/? act as wildcards.</p>
+  <p><strong>Use when:</strong> you want to ignore “tri‑state” or explicitly masked bits.</p>
+
+  <h3>📘 Example:</h3>
+  <pre><code class="language-verilog">logic [3:0] code = 4'b10z1;  // bit[1] is Z
+
+casez (code)
+  4'b10?1: $display("Pattern 10?1 matched"); // ✅ ignores the Z at bit[1]
+  default: $display("No match");
+endcase</code></pre>
+<br>
+  <h1>🎲 casex (Wildcard ‘X’ & ‘Z’)</h1>
+  <p><strong>What it does:</strong> Treats both X (unknown) and Z as wildcards.</p>
+  <p><strong>Use when:</strong> you don’t care about unknowns or want to mask bits freely—but be cautious, as true errors can be hidden.</p>
+
+  <h3>📘 Example:</h3>
+  <pre><code class="language-verilog">logic [3:0] code = 4'b1x01;  // bit[2] is X
+
+casex (code)
+  4'b1?01: $display("Pattern 1?01 matched"); // ✅ ignores X or Z at bit[2]
+  default: $display("No match");
+endcase</code></pre>
+
+  <h3>📝 Quick Cheat‑Sheet</h3>
+  <table>
+    <thead>
+      <tr><th>Keyword</th><th>Wildcard Bits</th><th>Best When…</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>case</code></td><td>None</td><td>You need exact matches</td></tr>
+      <tr><td><code>casez</code></td><td>Z / ? only</td><td>You want to mask out tri‑state</td></tr>
+      <tr><td><code>casex</code></td><td>X & Z / ?</td><td>You want full don’t‑care flexibility</td></tr>
+    </tbody>
+  </table>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svuniqueif,unique0if,prioritif.html" style="text-decoration: none; color: var(--link);">
+      ← Back to unique if, unique0 if, priority if
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svcaseunique.html" style="text-decoration: none; color: var(--link);">
+      Next: unique case, unique0 case, priority case →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

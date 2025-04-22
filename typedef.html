@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>typedef in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: ☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+  <h1>🔖 typedef</h1>
+  <p>When your testbench uses long or complex data-type declarations in multiple places, updating them everywhere can be a headache. <code>typedef</code> lets you create a shorter, user‑friendly alias for any existing type. Change it once in the typedef, and your whole testbench automatically picks up the new definition!</p>
+
+  <h2>Why Use typedef? 🤔</h2>
+  <ul>
+    <li><strong>Maintainability:</strong> Rename or tweak the underlying type in one spot.</li>
+    <li><strong>Readability:</strong> Shorter type names make declarations cleaner.</li>
+    <li><strong>Reuse:</strong> Use your custom type everywhere without rewriting the full definition.</li>
+  </ul>
+
+  <h2>Example: Streamlining a Packet Header 🛩️</h2>
+  <p>Imagine you have a network‑packet header with several fields:</p>
+
+  <pre><code class="language-verilog">// Without typedef: very verbose!
+bit       valid;
+logic [1:0] version;
+bit [3:0]  msg_type;
+int unsigned session_id;</code></pre>
+
+  <p>Using typedef, we collapse this into one neat alias:</p>
+
+  <pre><code class="language-verilog">// 1) Define the alias
+typedef struct packed {
+  bit           valid;       // 1 bit
+  logic [1:0]   version;     // 2 bits
+  bit [3:0]     msg_type;    // 4 bits
+  int unsigned  session_id;  // 32 bits
+} packet_header_t;
+
+// 2) Now declare variables cleanly
+module tb;
+  packet_header_t hdr1, hdr2;
+
+  initial begin
+    // Initialize hdr1
+    hdr1 = '{valid:1, version:2'b10, msg_type:4'hA, session_id:1234};
+    $display("hdr1 = %p", hdr1);
+
+    // Copy to hdr2 and tweak
+    hdr2 = hdr1;
+    hdr2.msg_type = 4'hF;
+    $display("hdr2 = %p", hdr2);
+  end
+endmodule</code></pre>
+
+  <h2>Simulation Output</h2>
+  <pre><code class="language-text">hdr1 = '{valid:1, version:2, msg_type:10, session_id:1234}
+hdr2 = '{valid:1, version:2, msg_type:15, session_id:1234}</code></pre>
+<br>
+  <h2>🔗 Alias</h2>
+  <p>An <strong>alias</strong> is simply a second name for an existing variable, signal, or instance. It’s super‑handy for:</p>
+  <ul>
+    <li>Making big hierarchies easier to read</li>
+    <li>Shortening long bus names</li>
+    <li>Modeling bi‑directional short‑circuits</li>
+  </ul>
+
+  <h2>Example: Simplifying a Bus Name 🚌</h2>
+  <pre><code class="language-verilog">module tb;
+  // Original signal
+  logic [15:0] data_bus;
+
+  // Create an alias
+  alias bus = data_bus;
+
+  initial begin
+    // Use the alias just like the original
+    bus = 16'hA5A5;
+    $display("data_bus = 0x%0h", data_bus);
+  end
+endmodule</code></pre>
+
+  <h2>Result:</h2>
+  <pre><code class="language-text">data_bus = 0xA5A5</code></pre>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svStructure.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Structure
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svLoops.html" style="text-decoration: none; color: var(--link);">
+      Next: Loops →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

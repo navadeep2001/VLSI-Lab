@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>typedef in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+  <h1>typedef in SystemVerilog</h1>
+  <p><code>typedef</code> (short for type definition) is a SystemVerilog keyword that helps you create custom names (aliases) for existing data types.</p>
+
+  <p>📌 Think of it like giving someone a nickname. Instead of always calling them by their full name (which might be long or complex), you give them a shorter or easier name — and everyone knows who you’re referring to.</p>
+
+  <p>For example, instead of writing <code>enum {RED, YELLOW, GREEN}</code> every time, you can write <code>e_light</code> using <code>typedef</code>. It makes your code:</p>
+
+  <ul>
+    <li>🧹 More readable</li>
+    <li>🔁 Reusable</li>
+    <li>🔧 Easier to maintain</li>
+  </ul>
+
+  <h2>1️⃣ Why Use typedef?</h2>
+  <ul>
+    <li>🔄 <strong>Code reusability:</strong> Write once, use everywhere.</li>
+    <li>🧠 <strong>Easier to understand:</strong> Complex types become simple.</li>
+    <li>🧷 <strong>Consistency:</strong> Everyone uses the same definition.</li>
+    <li>✏️ <strong>Easy modifications:</strong> Change in one place, and it updates everywhere.</li>
+  </ul>
+
+  <h2>2️⃣ Using typedef with Different Data Types</h2>
+
+  <h3>✅ typedef with Basic Data Types</h3>
+  <pre><code class="language-verilog">
+typedef int my_int;
+my_int a, b;  // 'a' and 'b' are of type int now
+</code></pre>
+  <p>🎯 Analogy: Imagine you always have to write “two-wheeled motor vehicle with an engine” — tiring, right? Just say “bike” — that’s your <code>typedef</code>!</p>
+
+  <h3>✅ typedef with enum (Best Practice)</h3>
+  <pre><code class="language-verilog">
+typedef enum {RED, YELLOW, GREEN} e_light;
+e_light light1, light2;
+</code></pre>
+  <p>🎯 Analogy: Think of <code>e_light</code> as a label for “traffic light colors.” Instead of explaining all colors every time, you just refer to <code>e_light</code>.</p>
+
+  <h3>❌ Without typedef</h3>
+  <pre><code class="language-verilog">
+enum {RED, YELLOW, GREEN} light1;
+enum {RED, YELLOW, GREEN} light2;
+</code></pre>
+  <p>⚠️ <strong>Bad Practice:</strong> If you change GREEN to BLUE, you’d have to update it everywhere manually. That’s error-prone!</p>
+
+  <h2>📝 Summary</h2>
+  <ul>
+    <li>🧹 Cleans up your code</li>
+    <li>🔁 Promotes reusability</li>
+    <li>💡 Simplifies understanding</li>
+    <li>🛠️ Makes maintenance effortless</li>
+  </ul>
+
+  <p>✅ Just like using a shortcut, nickname, or abbreviation in daily life — <code>typedef</code> helps you write less and do more, with fewer mistakes!</p>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svstrings.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Strings in SystemVerilog
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svEnumerations.html" style="text-decoration: none; color: var(--link);">
+      Next: Enumerations →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

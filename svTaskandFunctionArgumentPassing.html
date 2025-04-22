@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Static and function argumenta passing - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🧩 How to Pass Arguments in SystemVerilog</h1>
+  <p>SystemVerilog supports the following ways to pass arguments into functions and tasks:</p>
+  <ul>
+    <li>✅ Pass by Value</li>
+    <li>✅ Pass by Reference</li>
+    <li>✅ Pass by Name</li>
+    <li>✅ Pass by Position</li>
+    <li>✅ Default Argument Values</li>
+  </ul>
+<br>
+  <h2>📦 What is Pass-by-Value?</h2>
+  <p>Pass-by-value means a copy of the original variable is passed to the function.</p>
+  <p>✅ Any changes inside the function are only on the copy, not on the original.</p>
+
+  <h3>🏪 Real-Life Analogy: Student Report Copy</h3>
+  <p>Imagine a teacher (main module) gives a photocopy of a student's report to another teacher (function).</p>
+  <p>That second teacher can highlight, scratch, or write on the copy ✍️. But the original report card stays unchanged in the school records 🗂️.</p>
+
+  <h3>💡 Example: Pass-by-Value</h3>
+  <pre><code class="language-verilog">module argument_pass_value;
+  int a, b, result;
+
+  function int average(int a, b);
+    a = a + 5;
+    return (a + b) / 2;
+  endfunction
+
+  initial begin
+    a = 10;
+    b = 30;
+    result = average(a, b);
+
+    $display("📄 Results After Function Call:");
+    $display("Original a = %0d", a);
+    $display("Original b = %0d", b);
+    $display("Result     = %0d", result);
+  end
+endmodule</code></pre>
+  <pre><code class="language-text">📄 Results After Function Call:
+Original a = 10
+Original b = 30
+Result     = 22</code></pre>
+<br>
+  <h2>🔗 What is Pass-by-Reference?</h2>
+  <p>In pass-by-reference, the actual original variable is passed to the function — not a copy.</p>
+  <p>So, any changes inside the function directly affect the original variable.</p>
+
+  <h3>🧍 Real-Life Analogy: Shared Recipe Board</h3>
+  <p>Imagine you and your friend are using the same whiteboard to write recipes:</p>
+  <p>If your friend (the function) changes something on the board, that change is visible to you too because you're both using the same whiteboard.</p>
+
+  <h3>💡 Example: Pass-by-Reference</h3>
+  <pre><code class="language-verilog">module argument_pass_reference;
+  int salary, bonus, total;
+
+  function int calculate_bonus(ref int salary, int bonus);
+    salary += bonus;
+    return salary;
+  endfunction
+
+  initial begin
+    salary = 50000;
+    bonus = 10000;
+
+    total = calculate_bonus(salary, bonus);
+
+    $display("💼 Final Payroll Details:");
+    $display("Salary (after bonus) = %0d", salary);
+    $display("Bonus                = %0d", bonus);
+    $display("Total Salary         = %0d", total);
+  end
+endmodule</code></pre>
+  <pre><code class="language-text">💼 Final Payroll Details:
+Salary (after bonus) = 60000
+Bonus                = 10000
+Total Salary         = 60000</code></pre>
+
+  <h3>🔒 Bonus Tip: Protect with const ref</h3>
+  <pre><code class="language-verilog">function void display_something(const ref int x);</code></pre>
+<br>
+  <h2>🧑‍🎓 Argument Pass by Name</h2>
+  <p>In argument pass by name, arguments can be passed in any order by specifying the name of the subroutine argument.</p>
+<br>
+  <h2>🧠 Argument Pass by Reference with the const Keyword</h2>
+  <h3>🔒 What is const ref?</h3>
+  <p>When we pass a variable as <strong>const ref</strong>, it means:</p>
+  <ul>
+    <li>It is passed by reference (you’re accessing the original).</li>
+    <li>But you are not allowed to modify it inside the function.</li>
+  </ul>
+
+  <h3>🧍 Real-Life Analogy: A “Read-Only” Contract</h3>
+  <p>You can read everything in it. But if you try to edit it, the pen won't work — it's a read-only document.</p>
+
+  <h3>💡 Example: Using const ref</h3>
+  <pre><code class="language-verilog">module const_reference_example;
+  int marks, bonus, final_marks;
+
+  function int add_bonus(const ref int marks, bonus);
+    return marks + bonus;
+  endfunction
+
+  initial begin
+    marks = 85;
+    bonus = 5;
+
+    final_marks = add_bonus(marks, bonus);
+
+    $display("🎓 Final Result:");
+    $display("Original Marks = %0d", marks);
+    $display("Bonus Given    = %0d", bonus);
+    $display("Total Marks    = %0d", final_marks);
+  end
+endmodule</code></pre>
+  <pre><code class="language-text">🎓 Final Result:
+Original Marks = 85
+Bonus Given    = 5
+Total Marks    = 90</code></pre>
+
+  <p>✅ Why does this work?<br>Because <code>marks</code> is passed by reference, but <code>const</code> ensures it can’t be modified.</p>
+
+  <p>❌ If you try to write <code>marks = marks + bonus;</code>, you'll get a compilation error:</p>
+  <pre><code class="language-text">Variable 'marks' declared as 'const' cannot be used in this context.</code></pre>
+<br>
+  <h2>🧠 What are Default Argument Values?</h2>
+  <p>When you define a function or task, you can give default values to its arguments. This way:</p>
+  <ul>
+    <li>If an argument is not passed, it uses the default.</li>
+    <li>If an argument is passed, it overrides the default.</li>
+  </ul>
+
+  <h3>🧍 Real-Life Analogy: 🍕 Pizza Order</h3>
+  <p>Say: “Give me a pizza 🍕. Default size and crust are fine, but make it extra cheese!”<br>Just like default arguments — if you skip it, defaults are used. If you specify, your value is used.</p>
+
+  <h3>💡 Example: Using Default Arguments</h3>
+  <pre><code class="language-verilog">module default_args_example;
+  int total_cost;
+
+  function int calculate_cost(int base = 100, topping = 20, delivery = 30);
+    return base + topping + delivery;
+  endfunction
+
+  initial begin
+    total_cost = calculate_cost( , , 50);
+
+    $display("🍕 Total Pizza Cost Breakdown:");
+    $display("Base Price     = ₹100 (default)");
+    $display("Topping Price  = ₹20  (default)");
+    $display("Delivery Fee   = ₹50  (custom)");
+    $display("Total Cost     = ₹%0d", total_cost);
+  end
+endmodule</code></pre>
+  <pre><code class="language-text">🍕 Total Pizza Cost Breakdown:
+Base Price     = ₹100 (default)
+Topping Price  = ₹20  (default)
+Delivery Fee   = ₹50  (custom)
+Total Cost     = ₹170</code></pre>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svfunction.html" style="text-decoration: none; color: var(--link);">
+      ← Back to function
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svProcessorThreadsIntro.html" style="text-decoration: none; color: var(--link);">
+      Next:  Process or Threads Intro  →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

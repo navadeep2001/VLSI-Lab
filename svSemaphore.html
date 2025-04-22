@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Semaphore in System verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🪙 Semaphore in SystemVerilog</h1>
+
+  <p><strong>🧠 What is a Semaphore?</strong><br>
+  A semaphore is like a bucket of keys 🪣🔑. Only processes that hold a key are allowed to proceed. If no keys are left, the process must wait until someone puts a key back.<br>
+  <br>
+  Used for:<br>
+  🔐 Mutual Exclusion (one-at-a-time access)<br>
+  🔄 Synchronization (order of execution)<br>
+  🚪 Controlling access to shared resources<br>
+  <br>
+  <strong>🛍️ Real-Life Analogy: Supermarket Carts</strong><br>
+  Imagine you’re at a supermarket. There are only 5 carts available.<br>
+  Each customer (process) must grab a cart before shopping (executing code).<br>
+  If no carts are left, they must wait until someone returns one.<br>
+  🛒 Carts = Semaphore keys<br>
+  👤 Customer = Thread/process<br>
+  🛍️ Shopping = Task execution<br></p>
+
+  <br>
+
+  <h2>🧾 Syntax</h2>
+  <pre><code class="language-verilog">
+semaphore sema;
+  </code></pre>
+  <p>This declares a semaphore object named <code>sema</code>. Since it’s a class, you must use <code>new()</code> to initialize it.</p>
+
+  <br>
+
+  <h2>🛠️ Semaphore Methods – with Examples</h2>
+
+  <h3>🔨 new(int keyCount = 0)</h3>
+  <p>Creates a semaphore with <code>keyCount</code> keys.</p>
+  <pre><code class="language-verilog">
+semaphore cart_sema;
+initial begin
+  cart_sema = new(3); // 3 keys (carts)
+end
+  </code></pre>
+
+  <br>
+
+  <h3>🧲 task get(int keyCount = 1)</h3>
+  <p>Takes keys from the bucket. If not enough keys are available, the process waits.</p>
+  <pre><code class="language-verilog">
+initial begin
+  $display("Trying to take 1 cart");
+  cart_sema.get(1);
+  $display("Got the cart!");
+end
+  </code></pre>
+
+  <br>
+
+  <h3>🛠️ function void put(int keyCount = 1)</h3>
+  <p>Returns keys to the bucket.</p>
+  <pre><code class="language-verilog">
+initial begin
+  #10;
+  $display("Returning 1 cart");
+  cart_sema.put(1);
+end
+  </code></pre>
+
+  <br>
+
+  <h3>❓ function int try_get(int keyCount = 1)</h3>
+  <p>Attempts to get keys. Returns 1 if successful, 0 if not enough keys are available (does not block).</p>
+  <pre><code class="language-verilog">
+initial begin
+  if (cart_sema.try_get(2))
+    $display("Got 2 carts without waiting");
+  else
+    $display("Couldn't get 2 carts right now");
+end
+  </code></pre>
+
+  <br>
+
+  <h2>🧪 Simple Complete Example</h2>
+  <pre><code class="language-verilog">
+module tb;
+  semaphore carts;
+
+  initial begin
+    carts = new(2);
+    
+    fork
+      begin
+        $display("A: Waiting for cart");
+        carts.get(1);
+        $display("A: Got cart, shopping...");
+        #10;
+        carts.put(1);
+        $display("A: Returned cart");
+      end
+
+      begin
+        $display("B: Waiting for cart");
+        carts.get(1);
+        $display("B: Got cart, shopping...");
+        #15;
+        carts.put(1);
+        $display("B: Returned cart");
+      end
+
+      begin
+        $display("C: Trying to get 2 carts");
+        if (carts.try_get(2))
+          $display("C: Got 2 carts");
+        else
+          $display("C: Could not get 2 carts immediately");
+      end
+    join
+  end
+endmodule
+  </code></pre>
+
+  <br>
+
+  <h2>🔐 Two Processes Accessing the Same Resource</h2>
+  <p><strong>📦 Real-life analogy:</strong> Imagine a printer in an office — only one person can print at a time.</p>
+  <pre><code class="language-verilog">
+module semaphore_ex;
+  semaphore printer;
+
+  initial begin
+    printer = new(1);
+    fork
+      use_printer("Alice");
+      use_printer("Bob");
+    join
+  end
+
+  task automatic use_printer(string name);
+    printer.get();
+    $display($time, " %s is using the printer", name);
+    #20;
+    printer.put();
+  endtask
+endmodule
+  </code></pre>
+
+  <br>
+
+  <h2>🔐 Semaphore with 4 Keys</h2>
+  <p><strong>🛒 Analogy:</strong> There are 4 trolleys, and each shopper needs all 4 to shop.</p>
+  <pre><code class="language-verilog">
+module semaphore_ex;
+  semaphore carts;
+
+  initial begin
+    carts = new(4);
+    fork
+      shop("Tom");
+      shop("Jerry");
+    join
+  end
+
+  task automatic shop(string name);
+    carts.get(4);
+    $display($time, " %s got all carts and is shopping", name);
+    #30;
+    carts.put(4);
+  endtask
+endmodule
+  </code></pre>
+
+  <br>
+
+  <h2>🔐 Semaphore Access with 2 Keys</h2>
+  <p><strong>🚪 Analogy:</strong> Two people can use the shared meeting rooms, but not all three at once.</p>
+  <pre><code class="language-verilog">
+module semaphore_ex;
+  semaphore meeting_room;
+
+  initial begin
+    meeting_room = new(4);
+    fork
+      book_room("Team A");
+      book_room("Team B");
+      book_room("Team C");
+    join
+  end
+
+  task automatic book_room(string team);
+    meeting_room.get(2);
+    $display($time, " %s got a room", team);
+    #30;
+    meeting_room.put(2);
+  endtask
+endmodule
+  </code></pre>
+
+  <br>
+
+  <h2>🔐 Putting Back More Keys</h2>
+  <p><strong>🎢 Analogy:</strong> Initially, only one ride car, but people donate extra after the ride!</p>
+  <pre><code class="language-verilog">
+module semaphore_ex;
+  semaphore ride;
+
+  initial begin
+    ride = new(1);
+    fork
+      enter_ride("Alex", 1);
+      enter_ride("Brian", 2);
+      enter_ride("Charlie", 3);
+    join
+  end
+
+  task automatic enter_ride(string name, int keys);
+    ride.get(keys);
+    $display($time, " %s entered with %0d key(s)", name, keys);
+    #30;
+    ride.put(keys + 1);
+  endtask
+endmodule
+  </code></pre>
+
+  <br>
+
+  <h2>🔐 Process with More Than 1 Key</h2>
+  <p><strong>🎮 Analogy:</strong> There are 4 gaming controllers. Different players want different numbers of controllers to play co-op games.</p>
+  <pre><code class="language-verilog">
+module semaphore_ex;
+  semaphore controllers;
+
+  initial begin
+    controllers = new(4);
+    fork
+      play_game("Player1", 2);
+      play_game("Player2", 2);
+      play_game("Player3", 3);
+      play_game("Player4", 1);
+    join
+  end
+
+  task automatic play_game(string name, int need);
+    controllers.get(need);
+    $display($time, " %s got %0d controllers", name, need);
+    #30;
+    controllers.put(need);
+  endtask
+endmodule
+  </code></pre>
+
+  <br>
+
+  <h2>🔐 Using try_get</h2>
+  <p><strong>🚗 Analogy:</strong> You peek into the parking lot. If there’s space, you park. If not, you leave.</p>
+  <pre><code class="language-verilog">
+module semaphore_ex;
+  semaphore parking;
+
+  initial begin
+    parking = new(4);
+    fork
+      try_parking("Car A", 4);
+      try_parking("Car B", 4);
+    join
+  end
+
+  task automatic try_parking(string car, int needed);
+    if (parking.try_get(needed)) begin
+      $display($time, " %s got %0d slots", car, needed);
+      #30;
+      parking.put(needed);
+    end else begin
+      $display($time, " %s couldn't get a parking slot", car);
+    end
+  endtask
+endmodule
+  </code></pre>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svEvent.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Event
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svMailbox.html" style="text-decoration: none; color: var(--link);">
+      Next:  Mailbox  →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

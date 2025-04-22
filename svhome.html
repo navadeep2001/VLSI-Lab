@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>system verilog - VLSI Labs</title>
+<title>learn system verilog - VLSI Labs</title>
+<title>system verilog course - VLSI Labs</title>
+<title>complete system verilog - VLSI Labs</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    .module {
+      background: var(--card);
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .module:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .module h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+
+    .topics {
+      margin-top: 0.5rem;
+      padding-left: 1rem;
+      display: none;
+    }
+
+    .topics a {
+      display: block;
+      margin: 5px 0;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .topics a:hover {
+      color: var(--accent);
+    }
+
+    .active .topics {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+  <a href="index.html">
+    <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+  </a>
+  <img src="header.png" alt="Header Banner" class="header-image">
+  <div class="toggle-container">
+    <div class="toggle-switch" onclick="toggleTheme()"></div>
+  </div>
+</header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+  <h1>SystemVerilog Syllabus</h1>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 1: Introduction to SystemVerilog</h2>
+    <div class="topics">
+      <a href="svintroduction.html">Introduction</a>
+      <a href="svTestbench.html">Testbench</a>
+      <a href="svdut.html">What is DUT?</a>
+      <a href="svinitial.html">Initial Block</a>
+      <a href="svalways.html">always block</a>
+      <a href="svtimescale.html">`timescale</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 2: Data Types Part 1</h2>
+    <div class="topics">
+      <a href="svdatatypesflowchart.html">Data Types Flowchart</a>
+      <a href="svstates.html">2-state vs 4-state</a>
+      <a href="svhardwaredatatypes.html">Hardware Data Types</a>
+      <a href="svissues.html">Issues with logic</a>
+      <a href="svvariable.html">Variable Data Types</a>
+      <a href="svoverflowunderflow.html">Overflow and Underflow in Signed and Unsigned Data Types</a>
+      <a href="svsimulation.html">Simulation Data Types</a>
+      <a href="svsign.html">Sign Casting in SystemVerilog</a>
+      <a href="svstrings.html">Strings in SystemVerilog</a>
+      <a href="svtypedef.html">typedef</a>
+      <a href="svEnumerations.html">Enumerations</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 3: Data Types Part 2 - Arrays</h2>
+    <div class="topics">
+      <a href="svArrays.html">Arrays</a>
+      <a href="svStatic.html">Static Array</a>
+      <a href="svDynamic.html">Dynamic Array</a>
+      <a href="svAssociative.html">Associative Array</a>
+      <a href="svQueues.html">Queues</a>
+      <a href="svStructure.html">Structure</a>
+      <a href="typedef.html">typedef</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 4: Control Flow</h2>
+    <div class="topics">
+      <a href="svLoops.html">Loops</a>
+      <a href="svforeverloop.html">forever loop</a>
+      <a href="svrepeatloop.html">repeat loop</a>
+      <a href="svwhileloop.html">while loop</a>
+      <a href="svdowhileloop.html">do while loop</a>
+      <a href="svforloop.html">for loop</a>
+      <a href="svforeachloop.html">foreach loop</a>
+      <a href="svbreakandcontinuestatements.html">break and continue statements</a>
+      <a href="svifelseif.html">if else if</a>
+      <a href="svuniqueif,unique0if,prioritif.html">unique if, unique0 if, priority if</a>
+      <a href="svcase.html">case, casez, casex</a>
+      <a href="svcaseunique.html">unique case, unique0 case, priority case</a>
+      <a href="svBlockingandNon-Blocking.html">Blocking and Non-Blocking</a>
+      <a href="svalwaysinSystemVerilog.html">always in SystemVerilog</a>
+      <a href="svalways_comb.html">always_comb (combinational logic)</a>
+      <a href="svalways_ff.html">always_ff (sequential logic)</a>
+      <a href="svalways_latch.html">always_latch (latch-based logic)</a>
+      <a href="svtask.html">task</a>
+      <a href="svfunction.html">function</a>
+      <a href="svTaskandFunctionArgumentPassing.html">Task and Function Argument Passing</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 5: Process or Threads</h2>
+    <div class="topics">
+      <a href="svProcessorThreadsIntro.html">Process or Threads Intro</a>
+      <a href="svfork_join.html">fork_join</a>
+      <a href="svfork_join_any.html">fork_join_any</a>
+      <a href="svfork_join_none.html">fork_join_none</a>
+      <a href="svdisablefork.html">disable fork</a>
+      <a href="svwaitfork.html">wait fork</a>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 6: Inter-Process Communication (IPC)</h2>
+    <div class="topics">
+      <a href="svIntroductiontoIPC.html">Introduction to IPC</a>
+      <a href="svEvent.html">Event</a>
+      <a href="svSemaphore.html">Semaphore</a>
+      <a href="svMailbox.html">Mailbox</a>
+      <a href="svScheduling.html">Scheduling</a>
+      <a href="svProgramBlock.html">Program Block</a>
+    </div>
+  </div>
+
+<div class="module">
+    <h2 onclick="toggleTopics(this)">📘 Module 7: Interface</h2>
+    <div class="topics">
+      <a href="svInterface.html">Interface</a>
+      <a href="svInterfaceBundles.html">Interface Bundles</a>
+      <a href="svVirtual Interface.html">Virtual Interface</a>
+      <a href="scModport.html">Modport</a>
+      <a href="svclockingBlock.html">clocking Block</a>
+      <a href="svoutputskewinclockingblocks.html">output skew in clocking blocks</a>
+      <a href="svinputskewinclockingblocks.html">input skew in clocking blocks</a>
+
+    </div>
+  </div>
+
+<div class="module">
+  <h2 onclick="toggleTopics(this)">📘 Module 8: Oop's 😬</h2>
+  
+  <div class="topics">
+    <a href="#">Basic Class Concepts</a>
+    <div class="subtopics">
+      <a href="svclass.html">- Class</a>
+      <a href="svClassHandlesandObjectsInterface.html">- Class Handles and Objects</a>
+      <a href="svConstructor.html">- Constructor</a>
+      <a href="svthisKeyword.html">- this Keyword</a>
+      <a href="svStaticClassPropertiesandStaticMethods.html">- Static Class Properties and Static Methods</a>
+      <a href="svClassAssignment.html">- Class Assignment</a>
+      <a href="svShallowCopy.html">- Shallow Copy</a>
+      <a href="svDeepCopy.html">- Deep Copy</a>
+    </div>
+  </div>
+
+  <div class="topics">
+    <br><br>
+    <a href="#">Advanced Class Usage</a>
+    <div class="subtopics">
+      <a href="svParameterizedclass.html">- Parameterized Class</a>
+      <a href="svtypedefClass.html">- typedef Class</a>
+      <a href="svtypedefForwordDeclaration.html">- typedef Forward Declaration</a>
+      <a href="svexternMethod?externKeyword.html">- extern Method? extern Keyword</a>
+      <a href="svClassScopeResolutionOperator.html">- Class Scope Resolution Operator ::</a>
+    </div>
+  </div>
+
+  <div class="topics">
+    <br><br>
+    <a href="#">Inheritance and Polymorphism</a>
+    <div class="subtopics">
+      <a href="svInheritance.html">- Inheritance</a>
+      <a href="svPolymorphism.html">- Polymorphism</a>
+      <a href="svOverridingClassMember.html">- Overriding Class Member</a>
+      <a href="svVirtual Method.html">- Virtual Method</a>
+      <a href="svsuper Keyword.html">- super Keyword</a>
+    </div>
+  </div>
+
+  <div class="topics">
+    <br><br>
+    <a href="#">Abstraction and Encapsulation</a>
+    <div class="subtopics">
+      <a href="svAbstractClasses/PureMethods.html">- Abstract Classes / Pure Methods</a>
+      <a href="svDataHidingandEncapsulation.html">- Data Hiding and Encapsulation</a>
+      <a href="svAccessQualifierlocal.html">- Access Qualifier local</a>
+    </div>
+  </div>
+
+  <div class="topics">
+    <br><br>
+    <a href="#">Miscellaneous / Advanced Concepts</a>
+    <div class="subtopics">
+      <a href="svCasting.html">- Casting</a>
+      <a href="svRandomization.html">- Randomization</a>
+    </div>
+  </div>
+
+</div>
+
+  </div>
+
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <script>
+  // Apply saved theme on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark');
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }
+
+  function toggleTopics(el) {
+    const parent = el.parentElement;
+    parent.classList.toggle('active');
+  }
+</script>
+
+</body>
+</html>

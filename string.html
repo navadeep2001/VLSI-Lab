@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Strings in Verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-verilog.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+    p, ul {
+      line-height: 1.6;
+    }
+    img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+    .return-link {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .return-link a {
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .return-link a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+    code {
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🧵 Strings in Verilog</h1>
+    <h2>📝 Definition:</h2>
+    <p>Strings in Verilog are sequences of 8-bit ASCII characters enclosed within double quotes (<code>"</code>). They are typically used for display messages, testbenches, file I/O, etc.</p>
+
+    <h2>📌 Key Characteristics:</h2>
+    <table>
+      <tr><td><strong>Enclosure</strong></td><td>Strings are enclosed in double quotes " "</td></tr>
+      <tr><td><strong>Character Encoding</strong></td><td>Each character is 8 bits (ASCII format)</td></tr>
+      <tr><td><strong>Data Type</strong></td><td>Stored in a <code>reg</code> variable</td></tr>
+      <tr><td><strong>Multiline Support</strong></td><td>❌ Cannot span multiple lines</td></tr>
+      <tr><td><strong>Escaped Characters</strong></td><td>✅ Supports escaped characters like <code>\n</code>, <code>\t</code>, <code>\\</code>, etc.</td></tr>
+      <tr><td><strong>Use Case</strong></td><td>Common in <code>$display</code>, <code>$fwrite</code>, and other simulation-time tasks</td></tr>
+    </table>
+
+    <h2>🛠️ Syntax:</h2>
+    <pre><code class="language-verilog">reg [8*<num_chars>-1:0] string_variable;</code></pre>
+    <p><code>&lt;num_chars&gt;</code> is the maximum number of characters you want to store.</p>
+
+    <h2>✅ Examples:</h2>
+    <h3>📘 Example 1: Simple String</h3>
+    <pre><code class="language-verilog">module string_example;
+  reg [8*20-1:0] my_string;
+
+  initial begin
+    my_string = "Hello, Verilog!";
+    $display("The string is: %s", my_string);
+  end
+endmodule</code></pre>
+
+    <h4>🔹 Output:</h4>
+    <pre><code class="language-csharp">The string is: Hello, Verilog!</code></pre>
+
+    <h3>📘 Example 2: String with Escaped Characters</h3>
+    <pre><code class="language-verilog">module escape_string;
+  reg [8*40-1:0] esc_string;
+
+  initial begin
+    esc_string = "Line1\\nLine2\\tTabbed";
+    $display("Escaped string:\\n%s", esc_string);
+  end
+endmodule</code></pre>
+
+    <h4>🔹 Output:</h4>
+    <pre><code class="language-csharp">Escaped string:
+Line1
+Line2	Tabbed</code></pre>
+
+    <h2>📚 Common Escaped Characters in Verilog Strings</h2>
+    <table>
+      <tr><td><code>\n</code></td><td>Newline</td></tr>
+      <tr><td><code>\t</code></td><td>Horizontal Tab</td></tr>
+      <tr><td><code>\"</code></td><td>Double Quote</td></tr>
+      <tr><td><code>\\</code></td><td>Backslash</td></tr>
+      <tr><td><code>\r</code></td><td>Carriage Return</td></tr>
+    </table>
+
+    <h2>⚠️ Rules and Limitations</h2>
+    <ul>
+      <li>A string must fit entirely within the allocated reg size.</li>
+      <li>Truncation happens if the string is longer than the reg can store.</li>
+      <li>Strings cannot span multiple lines (i.e., no line breaks inside a string literal).</li>
+      <li>You cannot perform arithmetic directly on strings — they are for display and text handling only.</li>
+    </ul>
+
+    <h2>📦 Advanced Usage:</h2>
+    <h3>🧪 Comparing Strings:</h3>
+    <p>You can compare strings using bitwise equality (since strings are just bit vectors):</p>
+    <pre><code class="language-verilog">reg [8*10-1:0] str1 = "Hello";
+reg [8*10-1:0] str2 = "Hello";
+
+initial begin
+  if (str1 == str2)
+    $display("Strings match!");
+  else
+    $display("Strings don't match.");
+end</code></pre>
+    <div class="nav-links">
+      <a href="operators.html">← Back to Operators</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="42states.html">Next: 4-state vs 2-state Logic →</a>
+    </div>
+
+    <div class="return-link">
+      <a href="veriloghome.html">↩ Return to Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

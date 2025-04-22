@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>inital block in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    h1, h2 {
+      color: var(--accent);
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      margin-top: 2rem;
+    }
+    p, ul {
+      line-height: 1.6;
+    }
+    ul {
+      padding-left: 1.2rem;
+    }
+    pre {
+      background: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="svhome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🛠️ Use of Initial Block in SystemVerilog</h1>
+
+    <p>The <strong>initial block</strong> in SystemVerilog is used to execute code once at the start of a simulation. It is typically used for:</p>
+    <ul>
+      <li><strong>Testbench Initialization</strong> – Setting up initial conditions, variables, and signals.</li>
+      <li><strong>Applying Stimuli</strong> – Driving input signals for simulation.</li>
+      <li><strong>Displaying Messages</strong> – Using <code>$display</code>, <code>$monitor</code>, or <code>$write</code> for debugging.</li>
+      <li><strong>Delays & Timing Control</strong> – Introducing delays using <code>#</code> or <code>@</code> for waveform generation.</li>
+    </ul>
+
+    <h2>Example: Basic Usage</h2>
+    <pre><code class="language-verilog">module test;
+  reg clk, reset;
+
+  initial begin
+    clk = 0;  
+    reset = 1;
+    #10 reset = 0;  // De-assert reset after 10 time units
+    #100 $finish;   // End simulation after 100 time units
+  end
+
+  always #5 clk = ~clk;  // Clock generation
+endmodule
+</code></pre>
+
+    <h2>Key Points</h2>
+    <ul>
+      <li>Executes only once at simulation time <code>t = 0</code> (unless delayed).</li>
+      <li>Used mostly in testbenches, not in synthesizable RTL code.</li>
+      <li>Multiple initial blocks in a module execute in parallel.</li>
+    </ul>
+
+    <h2>🔧 Example: Demonstrating Multiple Initial Blocks Executing Simultaneously</h2>
+    <pre><code class="language-verilog">module initial_block_demo;
+
+  initial begin
+    $display("Time = %0t : Initial Block 1 - Start", $time);
+    #5;
+    $display("Time = %0t : Initial Block 1 - After 5 time units", $time);
+  end
+
+  initial begin
+    $display("Time = %0t : Initial Block 2 - Start", $time);
+    #10;
+    $display("Time = %0t : Initial Block 2 - After 10 time units", $time);
+  end
+
+  initial begin
+    $display("Time = %0t : Initial Block 3 - Start", $time);
+    #1;
+    $display("Time = %0t : Initial Block 3 - After 1 time unit", $time);
+  end
+
+endmodule
+</code></pre>
+
+    <h2>🧠 Output Explanation</h2>
+    <pre><code class="language-none">Time = 0 : Initial Block 1 - Start
+Time = 0 : Initial Block 2 - Start
+Time = 0 : Initial Block 3 - Start
+Time = 1 : Initial Block 3 - After 1 time unit
+Time = 5 : Initial Block 1 - After 5 time units
+Time = 10 : Initial Block 2 - After 10 time units
+</code></pre>
+
+    <p>This shows how multiple <code>initial</code> blocks run concurrently. Their execution depends on their individual delays.</p>
+
+    <h2>💡 Example: Sequential Execution</h2>
+    <pre><code class="language-verilog">module test;
+  initial begin
+    $display("Step 1: Start");
+    #10 $display("Step 2: After 10 time units");
+    #5 $display("Step 3: After 5 more time units");
+  end
+endmodule
+</code></pre>
+
+    <h2>Output</h2>
+    <pre><code class="language-none">Step 1: Start
+Step 2: After 10 time units
+Step 3: After 5 more time units
+</code></pre>
+
+    <div class="nav-links">
+      <a href="svdut.html">← Back to What is DUT?</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="svalways.html">Next: always block →</a>
+      <br><br>
+      <a href="svhome.html">↩ Return to System Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

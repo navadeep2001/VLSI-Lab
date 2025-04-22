@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulation Data Types - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-systemverilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+<main>
+  <h1>📏 Simulation Data Types</h1>
+  <p>Used to store time values.</p>
+
+  <h3>1. Fixed-Point Time</h3>
+  <table>
+    <thead>
+      <tr><th>Data Type</th><th>Size</th><th>Usage</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>time</code></td><td>64 bits</td><td>Stores time in simulation</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Example Usage:</strong></p>
+  <pre><code class="language-systemverilog">
+time t1;
+initial begin
+    t1 = $time;
+end
+</code></pre>
+
+  <h3>2. Floating-Point Time</h3>
+  <table>
+    <thead>
+      <tr><th>Data Type</th><th>Size</th><th>Usage</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>realtime</code></td><td>64 bits</td><td>High-precision time storage</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Example Usage:</strong></p>
+  <pre><code class="language-systemverilog">
+realtime t1;
+initial begin
+    t1 = $realtime;
+end
+</code></pre>
+
+  <h3>3. Bit Data Type</h3>
+  <table>
+    <thead>
+      <tr><th>Data Type</th><th>Size</th><th>State</th><th>Usage</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>bit</code></td><td>User-defined</td><td>2-state</td><td>Used for fast simulations</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Example Usage:</strong></p>
+  <pre><code class="language-systemverilog">
+bit [3:0] mybit; // 4-bit vector
+</code></pre>
+
+  <h1>🧮 Value Truncation in SystemVerilog</h1>
+  <p>Truncation occurs when a value is assigned to a variable with fewer bits than the original value. The extra higher-order bits are discarded, which can cause unexpected results if not handled properly.</p>
+
+  <h4>1. Truncation in Unsigned Values</h4>
+  <p>When assigning a larger-bit-width unsigned value to a smaller-bit-width variable, the higher-order bits are removed.</p>
+
+  <p><strong>Example (Unsigned Truncation):</strong></p>
+  <pre><code class="language-systemverilog">
+logic [7:0] a;
+logic [3:0] b;
+
+initial begin
+    a = 8'b10110011;  // 8-bit value
+    b = a;            // Assign to 4-bit variable (truncation occurs)
+
+    $display("Original 8-bit value: %b", a); // 10110011
+    $display("Truncated 4-bit value: %b", b); // 0011 (Lower 4 bits remain)
+end
+</code></pre>
+
+  <p>🔹 <strong>Result:</strong></p>
+  <pre><code class="language-yaml">
+Original 8-bit value: 10110011  
+Truncated 4-bit value: 0011  
+✅ Only the least significant 4 bits (0011) are retained.
+</code></pre>
+
+  <h4>2. Truncation in Signed Values</h4>
+  <p>Signed values use two’s complement representation. If truncation removes the sign bit, the value changes completely.</p>
+
+  <p><strong>Example (Signed Truncation):</strong></p>
+  <pre><code class="language-systemverilog">
+logic signed [7:0] x;
+logic signed [3:0] y;
+
+initial begin
+    x = 8'sb11111000;  // -8 in two's complement
+    y = x;             // Assign to 4-bit variable (truncation occurs)
+
+    $display("Original 8-bit value: %b (%d)", x, x);
+    $display("Truncated 4-bit value: %b (%d)", y, y);
+end
+</code></pre>
+
+  <p>🔹 <strong>Result:</strong></p>
+  <pre><code class="language-yaml">
+Original 8-bit value: 11111000 (-8)  
+Truncated 4-bit value: 1000 (-8)  
+✅ Since the sign bit (1) remains, the value is still -8.
+⚠️ If the sign bit were removed, it could completely change the number!
+</code></pre>
+
+  <h4>3. Truncation in Arithmetic Operations</h4>
+  <p>When performing arithmetic operations, SystemVerilog truncates the result if it doesn't fit in the destination variable.</p>
+
+  <p><strong>Example (Arithmetic Truncation):</strong></p>
+  <pre><code class="language-systemverilog">
+logic [3:0] a, b, c;
+initial begin
+    a = 4'b1100; // 12
+    b = 4'b1010; // 10
+    c = a + b;   // Expected: 22 (5'b10110), but truncation occurs
+
+    $display("Addition result before truncation: %b", a + b); // 10110 (5-bit)
+    $display("Stored truncated result: %b (%d)", c, c); // 0110 (6)
+end
+</code></pre>
+
+  <p>🔹 <strong>Result:</strong></p>
+  <pre><code class="language-yaml">
+Addition result before truncation: 10110  
+Stored truncated result: 0110 (6)  
+⚠️ Since c is 4-bit, the MSB (1) is lost, and the value becomes 0110 (6 instead of 22).
+</code></pre>
+
+  <p>✅ <strong>Solution:</strong> Use a larger bit-width for storage:</p>
+  <pre><code class="language-systemverilog">
+logic [5:0] c; // Now it can hold 5-bit results correctly.
+</code></pre>
+
+  <h4>4. How to Avoid Truncation Issues</h4>
+  <ul>
+    <li>Use explicit bit-width calculations.</li>
+    <li>Sign-extend values when assigning signed numbers.</li>
+    <li>Check the results after arithmetic operations to ensure no data loss.</li>
+    <li>Use assertions to catch unexpected truncation.</li>
+  </ul>
+</main>
+
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") {
+        document.body.classList.add("dark");
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    }
+  </script>
+
+  <!-- Navigation Links -->
+  <!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svoverflowunderflow.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Overflow and Underflow in Signed and Unsigned Data Types
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svsign.html" style="text-decoration: none; color: var(--link);">
+      Next: Sign Casting in SystemVerilog →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Strings in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+  <h1>Strings in SystemVerilog</h1>
+  <p>A string in SystemVerilog is a collection of characters that can change in length during simulation. It is different from a string stored in a <code>reg</code> array.</p>
+
+  <h2>1. Declaring a String Variable</h2>
+  <pre><code class="language-verilog">
+string my_string = "Hello!";
+</code></pre>
+  <p><code>my_string</code> is a string variable that can store a dynamic-length text. If no initial value is given, it defaults to "" (empty string).</p>
+
+  <h2>2. Example: Using Strings</h2>
+  <pre><code class="language-verilog">
+module tb;
+  string dialog = "Hello!";
+
+  initial begin
+    $display ("%s", dialog);
+    foreach (dialog[i]) begin
+      $display ("%s", dialog[i]);
+    end
+  end
+endmodule
+</code></pre>
+
+  <h2>3. Strings in Verilog (reg array)</h2>
+  <pre><code class="language-verilog">
+reg [16*8-1:0] my_string;
+my_string = "How are you";
+my_string = "How are you doing?";
+</code></pre>
+  <p>If the string is too long, it gets truncated from the left. If it’s short, extra zeros are padded at the beginning.</p>
+
+  <h2>4. String Operators</h2>
+  <ul>
+    <li><strong>Equality:</strong> <code>Str1 == Str2</code></li>
+    <li><strong>Inequality:</strong> <code>Str1 != Str2</code></li>
+    <li><strong>Comparison:</strong> <code>&lt;, &lt;=, &gt;, &gt;=</code></li>
+    <li><strong>Concatenation:</strong> <code>{Str1, Str2}</code></li>
+    <li><strong>Replication:</strong> <code>{3{"Hi"}}</code></li>
+    <li><strong>Indexing:</strong> <code>Str[i]</code></li>
+    <li><strong>Methods:</strong> <code>Str.method()</code></li>
+  </ul>
+
+  <h2>5. Example: Operators</h2>
+  <pre><code class="language-verilog">
+module tb;
+  string str1 = "Hello";
+  string str2 = "World";
+  string str3 = "Hello";
+
+  initial begin
+    if (str1 == str3) $display("str1 == str3: Equal");
+    if (str1 != str2) $display("str1 != str2: Not Equal");
+    if (str1 < str2)  $display("str1 < str2: True");
+    if (str1 > str2)  $display("str1 > str2: True");
+    
+    string concat_str = {str1, " ", str2};
+    $display("Concatenated: %s", concat_str);
+
+    string repeat_str = {3{"Ha"}};
+    $display("Replicated: %s", repeat_str);
+
+    byte ch = str1[1];
+    $display("str1[1]: %c (ASCII: %0d)", ch, ch);
+
+    byte out_of_range = str1[10];
+    $display("str1[10]: ASCII: %0d", out_of_range);
+  end
+endmodule
+</code></pre>
+
+  <h2>6. Basic String Methods</h2>
+  <ul>
+    <li><code>str.len()</code> – Returns length</li>
+    <li><code>str.putc(i, c)</code> – Replace character at index</li>
+    <li><code>str.getc(i)</code> – Get ASCII at index</li>
+    <li><code>str.tolower()</code> – Convert to lowercase</li>
+    <li><code>str.compare(s)</code> – Compare case-sensitive</li>
+    <li><code>str.icompare(s)</code> – Compare case-insensitive</li>
+    <li><code>str.substr(i,j)</code> – Substring from i to j</li>
+  </ul>
+
+  <h2>7. Example: String Methods</h2>
+  <pre><code class="language-verilog">
+module tb;
+  string str = "Hello World!";
+
+  initial begin
+    $display("Length: %0d", str.len());
+    str.putc(6, "M");
+    $display("After putc: %s", str);
+    $display("str[6] ASCII: %0d", str.getc(6));
+    $display("Lowercase: %s", str.tolower());
+
+    if (str.compare("Hello World!") == 0)
+      $display("Equal");
+    else
+      $display("Not Equal");
+
+    if (str.icompare("hello world!") == 0)
+      $display("Equal (case-insensitive)");
+    else
+      $display("Not Equal (case-insensitive)");
+
+    $display("Substring (6-10): %s", str.substr(6,10));
+  end
+endmodule
+</code></pre>
+
+  <h2>8. String Conversion Methods</h2>
+  <ul>
+    <li><code>str.atoi()</code> – String to integer</li>
+    <li><code>str.atohex()</code> – String to hex</li>
+    <li><code>str.atooct()</code> – String to octal</li>
+    <li><code>str.atobin()</code> – String to binary</li>
+    <li><code>str.atoreal()</code> – String to real</li>
+    <li><code>str.itoa(i)</code> – Integer to string</li>
+    <li><code>str.hextoa(i)</code> – Hex to string</li>
+    <li><code>str.octtoa(i)</code> – Octal to string</li>
+    <li><code>str.bintoa(i)</code> – Binary to string</li>
+    <li><code>str.realtoa(r)</code> – Real to string</li>
+  </ul>
+
+  <h2>9. Example: String Conversions</h2>
+  <pre><code class="language-verilog">
+module tb;
+  string str;
+  integer int_val;
+  real real_val;
+
+  initial begin
+    str = "1234";
+    int_val = str.atoi();
+    $display("atoi: %0d", int_val);
+
+    str = "1A3";
+    int_val = str.atohex();
+    $display("atohex: %0d (0x%0h)", int_val, int_val);
+
+    str = "75";
+    int_val = str.atooct();
+    $display("atooct: %0d (0o%0o)", int_val, int_val);
+
+    str = "1010";
+    int_val = str.atobin();
+    $display("atobin: %0d (0b%b)", int_val, int_val);
+
+    str = "3.1415";
+    real_val = str.atoreal();
+    $display("atoreal: %f", real_val);
+
+    int_val = 255;
+    str.itoa(int_val);
+    $display("itoa: %s", str);
+
+    str.hextoa(int_val);
+    $display("hextoa: %s", str);
+
+    str.octtoa(int_val);
+    $display("octtoa: %s", str);
+
+    str.bintoa(int_val);
+    $display("bintoa: %s", str);
+
+    real_val = 9.81;
+    str.realtoa(real_val);
+    $display("realtoa: %s", str);
+  end
+endmodule
+</code></pre>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svsign.html" style="text-decoration: none; color: var(--link);">
+      ← Back to Sign Casting in SystemVerilog
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svtypedef.html" style="text-decoration: none; color: var(--link);">
+      Next: typedef →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

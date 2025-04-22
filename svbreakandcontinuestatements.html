@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>break and continue in systemverilog and verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🌀 break and continue statements</h1>
+  <p>🧠 Think of a <code>for</code> loop like a person climbing stairs, step by step.</p>
+
+  <h3>🔴 break — "Stop right there! I’m done."</h3>
+  <p>Imagine you're climbing stairs from step 0 to step 9. But someone told you: “Stop climbing once you reach step 7.”</p>
+  <pre><code class="language-verilog">module tb;
+  initial begin
+    for (int i = 0; i < 10; i++) begin
+      $display("Step [%0d]", i);
+      if (i == 7)
+        break; // Stop looping once i becomes 7
+    end
+  end
+endmodule</code></pre>
+
+  <p><strong>🧾 Output:</strong><br>
+  Step [0]<br>
+  Step [1]<br>
+  Step [2]<br>
+  Step [3]<br>
+  Step [4]<br>
+  Step [5]<br>
+  Step [6]<br>
+  Step [7]</p>
+
+  <p>🎯 <strong>Meaning:</strong> The loop breaks when <code>i</code> becomes 7 — so steps 8 and 9 are skipped.</p>
+  <p>💡 <strong>Analogy:</strong> You are in a queue to get ice cream. Once your favorite flavor comes (say at person 7), you grab it and leave the line.</p>
+<br>
+  <h3>🟡 continue — "Skip this one and go to the next."</h3>
+  <p>Imagine you’re again climbing stairs from 0 to 9, but someone tells you: “Don’t step on stair 7. Skip it!”</p>
+  <pre><code class="language-verilog">module tb;
+  initial begin
+    for (int i = 0; i < 10; i++) begin
+      if (i == 7)
+        continue; // Skip everything below and go to next i
+      $display("Step [%0d]", i);
+    end
+  end
+endmodule</code></pre>
+
+  <p><strong>🧾 Output:</strong><br>
+  Step [0]<br>
+  Step [1]<br>
+  Step [2]<br>
+  Step [3]<br>
+  Step [4]<br>
+  Step [5]<br>
+  Step [6]<br>
+  Step [8]<br>
+  Step [9]</p>
+
+  <p>🎯 <strong>Meaning:</strong> Step 7 is skipped — not printed.</p>
+  <p>💡 <strong>Analogy:</strong> You’re a judge at a talent show, judging 10 performances. You don’t like contestant number 7, so you skip them and continue with the rest.</p>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svforeachloop.html" style="text-decoration: none; color: var(--link);">
+      ← Back to foreach loop
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svifelseif.html" style="text-decoration: none; color: var(--link);">
+      Next: if else if →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

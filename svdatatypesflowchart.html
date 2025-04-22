@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>datatypes in systemverilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .logo { position: absolute; top: 1rem; left: 1rem; height: 60px; }
+    .header-image { max-height: 100px; height: auto; width: auto; }
+    .toggle-container { position: absolute; top: 1rem; right: 1rem; }
+    .toggle-switch {
+      position: relative; width: 80px; height: 36px; background: #ccc;
+      border-radius: 30px; cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '☀️'; position: absolute; left: 4px; top: 4px;
+      width: 28px; height: 28px; background: var(--bg);
+      color: var(--text); border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.3s; font-size: 16px;
+    }
+    body.dark .toggle-switch::after { content: '🌙'; left: 48px; }
+    main { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    h1, h2 { color: var(--accent); }
+    h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+    h2 { margin-top: 2rem; }
+    p, ul { line-height: 1.6; }
+    ul { padding-left: 1.2rem; }
+    pre { background: var(--card); padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    .nav-links { margin-top: 2rem; text-align: center; }
+    .nav-links a { text-decoration: none; color: var(--accent); font-weight: 500; }
+    .nav-links a:hover { text-decoration: underline; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { border: 1px solid var(--text); padding: 0.5rem; text-align: left; }
+    thead { background: var(--card); }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html"><img src="logo.png" alt="VLSI Labs Logo" class="logo"></a>
+    <a href="svhome.html"><img src="header.png" alt="Header Banner" class="header-image"></a>
+    <div class="toggle-container"><div class="toggle-switch" onclick="toggleTheme()"></div></div>
+  </header>
+
+  <main>
+    <h1>📊Datatypes Flowchart</h1>
+<img src="svdatatypes.png" 
+     alt="Data Types Flowchart" 
+     style="width: 90%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+
+    
+
+    <div class="nav-links">
+      <a href="svtimescale.html">← Back to `timescale</a> |
+      <a href="svstates.html">Next: 2-state vs 4-state →</a><br>
+      <a href="svhome.html">↩ Return to System Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    // Persist theme across pages
+    window.onload = function() {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') document.body.classList.add('dark');
+    };
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

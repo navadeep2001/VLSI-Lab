@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Identifiers & Keywords - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+  <!-- Prism.js for syntax highlighting -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-verilog.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+    p, ul {
+      line-height: 1.6;
+    }
+    img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+    code {
+      font-family: 'Courier New', monospace;
+    }
+    .return-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    .return-link a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .return-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html"><img src="logo.png" alt="VLSI Labs Logo" class="logo"></a>
+    <a href="veriloghome.html"><img src="header.png" alt="Header Banner" class="header-image"></a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+  <main>
+    <h1>🆔 Identifiers</h1>
+    <p>Identifiers are names given to variables, modules, signals, etc., to reference them in code.</p>
+    <p>They make the design readable and manageable.</p>
+
+    <h2>✅ Rules for Identifiers</h2>
+    <ul>
+      <li>Can contain letters, digits, underscore (<code>_</code>), and dollar sign (<code>$</code>).</li>
+      <li>Case-sensitive (<code>Data</code> and <code>data</code> are different).</li>
+      <li>Maximum length: 1024 characters.</li>
+      <li>Must start with a letter or underscore.</li>
+      <li>Cannot start with a digit or just a <code>$</code>.</li>
+    </ul>
+
+    <h2>📌 Examples</h2>
+    <pre><code class="language-verilog">reg value;     // 'value' is an identifier
+input clk;     // 'clk' is an identifier
+reg _data1;    // Valid
+reg $temp;     // Valid (starts with letter + $ used later)
+reg 1value;    // ❌ Invalid (starts with digit)
+</code></pre>
+
+    <h1>🔑 Keywords</h1>
+    <p>Keywords are reserved words in Verilog.</p>
+    <p>They define language constructs like modules, data types, control flow, etc.</p>
+    <p>Do not use keywords as identifiers unless you escape them using <code>\</code>.</p>
+    <p>Verilog keywords are lowercase and case-sensitive.</p>
+
+    <h2>📚 List of Verilog Keywords</h2>
+    <pre><code>always         and            assign         automatic       begin
+buf            bufif0         bufif1         case            casex
+casez          cmos           deassign       default         defparam
+disable        edge           else           end             endcase
+endfunction    endmodule      endprimitive   endspecify      endtable
+endtask        event          for            force           forever
+fork           function       highz0         highz1          if
+ifnone         initial        inout          input           integer
+join           large          localparam     macromodule     medium
+module         nand           negedge        nmos            nor
+not            notif0         notif1         or              output
+parameter      pmos           posedge        primitive       pull0
+pull1          pulldown       pullup         rcmos           real
+realtime       reg            release        repeat          rnmos
+rpmos          rtran          rtranif0       rtranif1        scalared
+signed         small          specify        specparam       strong0
+strong1        supply0        supply1        table           task
+time           tran           tranif0        tranif1         tri
+tri0           tri1           triand         trior           trireg
+unsigned       vectored       wait           wand            weak0
+weak1          while          wire           wor             xnor
+xor</code></pre>
+
+    <div class="nav-links">
+      <a href="number.html">← Back to Number Specification</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="operators.html">Next: Operators →</a>
+    </div>
+
+    <div class="return-link">
+      <a href="veriloghome.html">↩ Return to Verilog Home</a>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

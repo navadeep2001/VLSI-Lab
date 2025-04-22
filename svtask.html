@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>tasks in system verilog - VLSI Labs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap">
+
+  <!-- ✅ Prism.js for Verilog/SystemVerilog highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-verilog.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f1f1f1;
+      --accent: #0077ff;
+      --link: #0077ff;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #66aaff;
+      --link: #66aaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem 1rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      height: 60px;
+    }
+
+    .header-image {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 80px;
+      height: 36px;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    body.dark .toggle-switch::after {
+      content: '🌙';
+      left: 48px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--card);
+    }
+
+    img.range-img {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="VLSI Labs Logo" class="logo">
+    </a>
+    <a href="veriloghome.html">
+      <img src="header.png" alt="Header Banner" class="header-image">
+    </a>
+    <div class="toggle-container">
+      <div class="toggle-switch" onclick="toggleTheme()"></div>
+    </div>
+  </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+
+  <h1>🔧 What is a Task in SystemVerilog?</h1>
+  <p>A task is a reusable block of code that performs an action — usually something that may take time, like writing to memory, waiting for signals, or interacting with hardware. Tasks are essential for writing modular, testable, and readable code in testbenches and designs.</p>
+
+  <h3>🏡 Real-Life Analogy:</h3>
+  <p>Think of a task as a kitchen where a recipe is followed:</p>
+  <ul>
+    <li>A <strong>static kitchen</strong> has one shared space — if two people cook at the same time, they’ll clash.</li>
+    <li>An <strong>automatic kitchen</strong> gives each person their own setup — no collisions, everyone cooks independently.</li>
+  </ul>
+
+  <h2>🧱 Types of Tasks in SystemVerilog</h2>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Behavior</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Static</td>
+        <td>Shared memory for all calls. Good for sequential logic. ⚠️ Not thread-safe</td>
+      </tr>
+      <tr>
+        <td>Automatic</td>
+        <td>Each call gets its own memory. Safe for parallel/multi-threaded usage ✅</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <h3>🗃️ 1. Static Tasks</h3>
+  <p><strong>📘 Definition:</strong> Static tasks use a single memory space. All invocations share the same internal variables.</p>
+  <p><strong>🚨 Risk:</strong> Parallel calls will interfere with each other.</p>
+  <p><strong>🔍 Example:</strong></p>
+  <pre><code class="language-verilog">task static static_count;
+  static int count = 0;
+  count++;
+  $display("Static Count: %0d", count);
+endtask</code></pre>
+
+  <p><strong>Output (after 3 calls):</strong></p>
+  <pre><code class="language-sql">Static Count: 1
+Static Count: 2
+Static Count: 3</code></pre>
+   <br>
+  <h3>🧳 2. Automatic Tasks</h3>
+  <p><strong>📘 Definition:</strong> Automatic tasks allocate a new memory frame for each call. Each invocation is independent.</p>
+  <p><strong>✅ Benefits:</strong> Safe for concurrent or recursive use. Can be used inside fork...join blocks.</p>
+  <p><strong>🔍 Example:</strong></p>
+  <pre><code class="language-verilog">task automatic auto_count;
+  int count = 0;
+  count++;
+  $display("Auto Count: %0d", count);
+endtask</code></pre>
+
+  <p><strong>Output (after 3 calls):</strong></p>
+  <pre><code class="language-vbnet">Auto Count: 1
+Auto Count: 1
+Auto Count: 1</code></pre>
+   <br>
+  <h3>⏳ 3. Tasks Can Contain Delays</h3>
+  <p>Unlike functions, tasks can consume simulation time using:</p>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Delay Type</th>
+        <th>Example</th>
+        <th>Meaning</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>#delay</td>
+        <td>#10;</td>
+        <td>Wait 10 time units</td>
+      </tr>
+      <tr>
+        <td>@event</td>
+        <td>@(posedge clk);</td>
+        <td>Wait for signal edge</td>
+      </tr>
+      <tr>
+        <td>wait</td>
+        <td>wait (ready);</td>
+        <td>Wait until condition is true</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>🔍 Delay Example:</strong></p>
+  <pre><code class="language-verilog">task automatic delayed_task(input int a);
+  $display("Start task with a=%0d at time %0t", a, $time);
+  #5;
+  $display("End task with a=%0d at time %0t", a, $time);
+endtask
+
+initial begin
+  delayed_task(42);  // takes 5 time units
+end</code></pre>
+   <br>
+  <h3>🧠 Syntax Options: Tasks with Arguments</h3>
+  <p><strong>✅ Option 1: Arguments in parentheses</strong></p>
+  <pre><code class="language-verilog">task sum(input int a, b, output int c);
+  c = a + b;
+endtask</code></pre>
+
+  <p><strong>✅ Option 2: Arguments declared inside</strong></p>
+  <pre><code class="language-verilog">task sum;
+  input int a, b;
+  output int c;
+  c = a + b;
+endtask</code></pre>
+   <br>
+  <h3>🛠️ Task Features</h3>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>✅ Can contain time delays</td><td>Unlike functions</td></tr>
+      <tr><td>✅ Input/output/inout arguments</td><td>Multiple values can be passed in and out</td></tr>
+      <tr><td>✅ Can use return;</td><td>Exit before reaching the end</td></tr>
+      <tr><td>✅ Can declare local/static/automatic variables</td><td>Inside task body</td></tr>
+      <tr><td>✅ Default argument type: logic</td><td>If no type specified</td></tr>
+      <tr><td>✅ Default direction: input</td><td>If no direction specified</td></tr>
+      <tr><td>✅ Supports default values</td><td>You can give arguments default values like in functions</td></tr>
+    </tbody>
+  </table>
+   <br>
+  <h3>🧪 Fun Test: Static vs Automatic</h3>
+  <pre><code class="language-verilog">module test;
+  task static_counter;
+    static int x = 0;
+    x++;
+    $display("Static Counter: %0d", x);
+  endtask
+
+  task automatic auto_counter;
+    int y = 0;
+    y++;
+    $display("Automatic Counter: %0d", y);
+  endtask
+
+  initial begin
+    repeat (3) begin
+      static_counter();  // Shares `x`
+      auto_counter();    // New `y` each time
+    end
+  end
+endmodule</code></pre>
+ <h3>🧪 Simulation Output</h3>
+  <pre><code class="language-verilog">Static Counter: 1
+Automatic Counter: 1
+Static Counter: 2
+Automatic Counter: 1
+Static Counter: 3
+Automatic Counter: 1</code></pre>
+
+   <br>
+  <h3>🧠 What’s Happening Step-by-Step</h3>
+  <h4>🎯 Goal:</h4>
+  <p>To demonstrate how static and automatic tasks handle internal variables differently across multiple calls.</p>
+
+  <h4>🔹 1. static_counter Task:</h4>
+  <pre><code class="language-verilog">task static_counter;
+  static int x = 0;  // persists across calls
+  x++;
+  $display("Static Counter: %0d", x);
+endtask</code></pre>
+  <p><code>static int x = 0;</code><br>➤ This variable <code>x</code> retains its value between calls.</p>
+  <ul>
+    <li>Each time <code>static_counter()</code> is called, it increments the same variable <code>x</code></li>
+    <li>So, <code>x</code> goes from 0 → 1 → 2 → 3</li>
+  </ul>
+
+  <h4>🔹 2. auto_counter Task:</h4>
+  <pre><code class="language-verilog">task automatic auto_counter;
+  int y = 0;  // re-initialized every time
+  y++;
+  $display("Automatic Counter: %0d", y);
+endtask</code></pre>
+  <p>Here, <code>y</code> is a non-static, automatic variable. Even though we didn’t write <code>automatic</code> before the <code>int</code>, it's inside an automatic task — so each call:</p>
+  <ul>
+    <li>Creates a new local variable <code>y</code></li>
+    <li>Initializes <code>y = 0</code>, then does <code>y++</code></li>
+    <li>So the output is always <code>1</code></li>
+  </ul>
+
+  <h4>⏱️ What Happens During Simulation?</h4>
+  <pre><code class="language-verilog">initial begin
+  repeat (3) begin
+    static_counter();  // 1st, 2nd, 3rd call
+    auto_counter();    // 1st, 2nd, 3rd call
+  end
+end</code></pre>
+
+  <h4>🧾 Final Output Breakdown</h4>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Call</th>
+        <th>Task</th>
+        <th>Action</th>
+        <th>Output</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>static_counter</td><td>x = 0 → 1</td><td>Static Counter: 1</td></tr>
+      <tr><td></td><td>auto_counter</td><td>y = 0 → 1</td><td>Automatic Counter: 1</td></tr>
+      <tr><td>2</td><td>static_counter</td><td>x = 1 → 2</td><td>Static Counter: 2</td></tr>
+      <tr><td></td><td>auto_counter</td><td>y = 0 → 1</td><td>Automatic Counter: 1</td></tr>
+      <tr><td>3</td><td>static_counter</td><td>x = 2 → 3</td><td>Static Counter: 3</td></tr>
+      <tr><td></td><td>auto_counter</td><td>y = 0 → 1</td><td>Automatic Counter: 1</td></tr>
+    </tbody>
+  </table>
+   <br>
+  <h3>🧠 Real-Life Analogies</h3>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Concept</th>
+        <th>Analogy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Static Task</td><td>🏢 Shared office — everyone uses same desk</td></tr>
+      <tr><td>Automatic Task</td><td>🏠 Everyone gets their own home office</td></tr>
+      <tr><td>Task vs Function</td><td>🛠️ Task = cooking (takes time)<br>🧮 Function = calculator (instant)</td></tr>
+      <tr><td>Delay in Task</td><td>⏳ Like waiting for an oven to finish baking a cake</td></tr>
+      <tr><td>Output arguments</td><td>📤 Like asking someone to give you a result when they're done cooking</td></tr>
+    </tbody>
+  </table>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Navigation Links -->
+<div style="margin-top: 40px; text-align: center; font-size: 1rem; color: var(--text);">
+  <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="svalways_latch.html" style="text-decoration: none; color: var(--link);">
+      ← Back to always_latch (latch-based logic)
+    </a>
+    <span style="color: var(--text);">|</span>
+    <a href="svfunction.html" style="text-decoration: none; color: var(--link);">
+      Next: function →
+    </a>
+  </div>
+  <div style="margin-top: 8px;">
+    <a href="svhome.html" style="text-decoration: none; color: var(--link);">
+      ↩ Return to System Verilog Home
+    </a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
